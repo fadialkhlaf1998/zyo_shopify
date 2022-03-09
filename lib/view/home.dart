@@ -11,6 +11,7 @@ import 'package:zyo_shopify/const/app_localization.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
 import 'package:zyo_shopify/controller/home_controller.dart';
+import 'package:zyo_shopify/controller/wishlist_controller.dart';
 import 'package:zyo_shopify/model/sub_categories.dart';
 import 'package:zyo_shopify/view/cart.dart';
 import 'package:zyo_shopify/view/categories.dart';
@@ -27,6 +28,7 @@ class Home extends StatelessWidget {
 
   HomeController homeController = Get.put(HomeController());
   CartController cartController = Get.find();
+  WishListController wishListController = Get.find();
   String _url = 'https://flutter.dev';
 
   @override
@@ -38,8 +40,8 @@ class Home extends StatelessWidget {
       body: Obx(() {
         return  homeController.select_nav_bar == 0 ? _home(context) :
         homeController.select_nav_bar == 1 ? Categories() :
-        homeController.select_nav_bar == 2 ? NewCollection() :
-        homeController.select_nav_bar == 3 ? WishList() : Settings();
+        // homeController.select_nav_bar == 2 ? NewCollection() :
+        homeController.select_nav_bar == 2 ? WishList() : Settings();
       }),
     );
   }
@@ -47,6 +49,7 @@ class Home extends StatelessWidget {
   _btnNavBar(BuildContext context) {
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width,
+      height: 55,
       child: BottomNavigationBar(
         mouseCursor: SystemMouseCursors.grab,
         type: BottomNavigationBarType.fixed,
@@ -88,22 +91,22 @@ class Home extends StatelessWidget {
             ),
             label: App_Localization.of(context)!.translate("categories"),
           ),
+          // BottomNavigationBarItem(
+          //   icon: homeController.select_nav_bar.value == 2 ?
+          //   Padding(
+          //     padding: const EdgeInsets.all(3),
+          //     child: SvgPicture.asset('assets/icons/new_collection2.svg',width: 18,height: 18,
+          //     ),
+          //   ) :
+          //   Padding(
+          //     padding: const EdgeInsets.all(3),
+          //     child: SvgPicture.asset('assets/icons/new_collection.svg', width: 18,height: 18
+          //     ),
+          //   ),
+          //   label: App_Localization.of(context)!.translate("new"),
+          // ),
           BottomNavigationBarItem(
             icon: homeController.select_nav_bar.value == 2 ?
-            Padding(
-              padding: const EdgeInsets.all(3),
-              child: SvgPicture.asset('assets/icons/new_collection2.svg',width: 18,height: 18,
-              ),
-            ) :
-            Padding(
-              padding: const EdgeInsets.all(3),
-              child: SvgPicture.asset('assets/icons/new_collection.svg', width: 18,height: 18
-              ),
-            ),
-            label: App_Localization.of(context)!.translate("new"),
-          ),
-          BottomNavigationBarItem(
-            icon: homeController.select_nav_bar.value == 3 ?
             Padding(
               padding: const EdgeInsets.all(3),
               child: SvgPicture.asset('assets/icons/wishlist2.svg',width: 15,height: 15,
@@ -117,7 +120,7 @@ class Home extends StatelessWidget {
             label: App_Localization.of(context)!.translate("wishlist"),
           ),
           BottomNavigationBarItem(
-            icon: homeController.select_nav_bar.value == 4 ?
+            icon: homeController.select_nav_bar.value == 3 ?
             Padding(
               padding: const EdgeInsets.all(3),
               child: SvgPicture.asset('assets/icons/settings2.svg',width: 15,height: 15,
@@ -152,13 +155,16 @@ class Home extends StatelessWidget {
                   controller: _scrollController,
                   child: Column(
                     children: [
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.12,),
+                      // SizedBox(height: MediaQuery.of(context).size.height * 0.12,),
                       _slider(context),
+                      homeController.selected_collection.value.length==0?
+                      Center()
+                      :_sub_category(context),
+                      _products(context)
                     ],
                   ),
                 ),
               ),
-              Positioned(top: 0,child:  _header(context),),
               Positioned(child: homeController.loading.value?Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -177,7 +183,7 @@ class Home extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width ,
       height: MediaQuery.of(context).size.height *0.12,
-      color: Colors.black,
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -287,161 +293,237 @@ class Home extends StatelessWidget {
       ),
     );
   }
-  _old_slider(BuildContext context){
-    return Stack(
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          color: Colors.red,
-          child: CarouselSlider(
-            items: homeController.collections.map((e){
-              return Hero(
-                tag: "product_tag"+e.id.toString()+"slider",
-                child: GestureDetector(
-                  onTap: (){
-                    // homeController.go_to_product_page(e.productId,"product_tag"+e.productId.toString()+"slider");
-                  },
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        // borderRadius: BorderRadius.circular(10),
-                        // image: DecorationImage(
-                        //     image: CachedNetworkImageProvider(e.image),
-                        //     fit: BoxFit.cover)
-                      ),
-                      child: CachedNetworkImage(
-                        // placeholder: (context, url) => const CircularProgressIndicator(),
-                        imageUrl: e.image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":e.image!.src!,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height*0.7,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      )
-                  ),
-                ),
-              );
-            }).toList(),
-            options: CarouselOptions(
-              autoPlay: true,
-              enlargeCenterPage: true,
-              viewportFraction: 1,
-              aspectRatio: 2.0,
-              initialPage: 0,
-              onPageChanged: (index, reason) {
-                homeController.slider_value.value=index;
-              },
-            ),
-          ),
-        ),
-        /**3 point*/
-        Positioned(
-          bottom: 0,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+  _sub_category(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20,bottom: 0),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+
+        child: Column(
+          children: [
+            Row(
               children: [
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:homeController.collections.map((e) {
-                      return  Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: homeController.slider_value.value == homeController.collections.indexOf(e)
-                                ? Colors.white
-                                : Colors.grey,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                Text(App_Localization.of(context)!.translate("categories"),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)
               ],
             ),
-          ),
-        ),
-      ],
-    );
-  }
+            Container(
+              height: 40,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: homeController.selected_collection.length,
+                  itemBuilder: (context,index){
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+                  child: GestureDetector(
+                    onTap: (){
+                      homeController.get_product(index);
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                         child: Column(
+                            children: [
+                              Text(homeController.selected_collection[index].title!,style: TextStyle(color: homeController.selected_sub_category.value==index?Colors.white:Colors.grey,fontSize: 11),),
+                              SizedBox(height: 5,),
+                            ],
+                          ),
+                        ),
+                      ],
 
-  _slider(BuildContext context){
-    return  ImageSlideshow(
-
-      /// Width of the [ImageSlideshow].
-      width: MediaQuery.of(context).size.width,
-
-      /// Height of the [ImageSlideshow].
-      height: MediaQuery.of(context).size.height*0.65,
-
-      /// The page to show when first creating the [ImageSlideshow].
-      initialPage: 0,
-
-      /// The color to paint the indicator.
-      indicatorColor: Colors.transparent,
-
-      /// The color to paint behind th indicator.
-      indicatorBackgroundColor: Colors.transparent,
-
-      /// The widgets to display in the [ImageSlideshow].
-      /// Add the sample image file into the images folder
-      children:homeController.collections.map((e){
-        return GestureDetector(
-          onTap: (){
-            // homeController.go_to_product_page(e.productId,"product_tag"+e.productId.toString()+"slider");
-          },
-          child:Stack(
-            children: [
-              Container(
-                  height: MediaQuery.of(context).size.height*0.65,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    image:  DecorationImage(
-                      fit: BoxFit.cover,
-                      colorFilter:  ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-                      image:  NetworkImage(
-                        e.image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":e.image!.src!,
-                      ),
                     ),
                   ),
-              ),
-              Positioned(bottom: 20,child:
-              Container(
-                width: MediaQuery.of(context).size.width,
-                  child: Center(child: Text(e.title!,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),))
-                ,)
-                ,)
-            ],
-          ),
-        );
-      }).toList(),
-
-      /// Called whenever the page in the center of the viewport changes.
-      onPageChanged: (value) {
-        print('Page changed: $value');
-      },
-
-      /// Auto scroll interval.
-      /// Do not auto scroll with null or 0.
-      autoPlayInterval: 3000,
-
-      /// Loops back to first slide.
-      isLoop: true,
+                );
+              }),
+            )
+          ],
+        ),
+      ),
     );
+  }
+  _products(BuildContext context){
+    return Padding(
+        padding: EdgeInsets.only(left: 20,right: 20,bottom: 20,top: homeController.selected_collection.value.length==0?20:0),
+        child: Container(
+          child: GridView.builder(
+            shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: homeController.products.value.length,
+              gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 4/6,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 20
+              ),
+              itemBuilder: (context,index){
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        homeController.go_to_product(homeController.products[index], "home"+homeController.products[index].id.toString());
+                      },
+                      child: Hero(
+                        tag: "home"+homeController.products[index].id.toString(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                                Expanded(
+                                  flex: 5,
+                                    child: Container(
+
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: DecorationImage(
+                                          image: NetworkImage(homeController.products.value[index].image!.src!,),
+                                          fit: BoxFit.fill
+                                        )
+                                      ),
+                                    )
+                                ),
+
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                       Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(homeController.products.value[homeController.selected_sub_category.value].variants!.first.price!+" "+ App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 11,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+
+                        child: Obx((){
+                          return IconButton(
+                            onPressed: (){
+                              wishListController.add_to_wishlist(homeController.products[index], context);
+                            },
+                            icon: Icon(homeController.products[index].favorite.value?Icons.favorite:Icons.favorite_border),
+                          );
+                        }))
+                  ],
+                );
+          }),
+        ),
+    );
+  }
+  _slider(BuildContext context){
+    return
+      // CarouselSlider(
+      //     items: homeController.collections.map((e){
+      //       //
+      //     return Container(
+      //         // margin: EdgeInsets.all(5.0),
+      //         child: ClipRRect(
+      //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      //       child: Stack(children: <Widget>[
+      //       InkResponse(
+      //       child: Image.network(e.image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":e.image!.src!,
+      //       fit: BoxFit.cover, width: 1000.0),)])));
+      //   }).toList(),
+      //     options: CarouselOptions(
+      //       height: MediaQuery.of(context).size.height*0.6,
+      //       initialPage: 0,
+      //       enableInfiniteScroll: true,
+      //       reverse: false,
+      //       autoPlay: false,
+      //       autoPlayInterval: Duration(seconds: 3),
+      //       autoPlayAnimationDuration: Duration(milliseconds: 800),
+      //       autoPlayCurve: Curves.fastOutSlowIn,
+      //       enlargeCenterPage: true,
+      //       onPageChanged: (val,index){
+      //         homeController.select_category.value=val;
+      //           homeController.get_sub_category(val);
+      //       },
+      //       scrollDirection: Axis.horizontal,
+      //
+      //     )
+      // );
+      Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height*0.65,
+            child: ImageSlideshow(
+
+              /// Width of the [ImageSlideshow].
+              width: double.infinity,
+
+              /// Height of the [ImageSlideshow].
+              height: MediaQuery.of(context).size.height*65,
+
+              /// The page to show when first creating the [ImageSlideshow].
+              initialPage: homeController.select_category.value,
+
+              /// The color to paint the indicator.
+              indicatorColor: Colors.transparent,
+
+              /// The color to paint behind th indicator.
+              indicatorBackgroundColor: Colors.transparent,
+
+              /// The widgets to display in the [ImageSlideshow].
+              /// Add the sample image file into the images folder
+              children:homeController.collections.map((e){
+                return Stack(
+                  children: [
+                    Container(
+                        // margin: EdgeInsets.all(5.0),
+                        child: ClipRRect(
+                        // borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      child: Stack(children: <Widget>[
+                      InkResponse(
+                      child: Image.network(e.image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":e.image!.src!,
+                      fit: BoxFit.cover, width: 1000.0),)]))),
+                   Positioned(
+                       bottom: 20,
+                       child:  Container(
+                         width: MediaQuery.of(context).size.width,
+                         child: Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                         Text(e.title!,style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold,letterSpacing: 2),)
+                     ],
+                   ),
+                       ))
+                  ],
+                );
+              }).toList(),
+
+              /// Called whenever the page in the center of the viewport changes.
+              onPageChanged: (value) {
+                print('Page changed: $value');
+                homeController.select_category.value=value;
+                          homeController.get_sub_category(value);
+              },
+
+              /// Auto scroll interval.
+              /// Do not auto scroll with null or 0.
+              autoPlayInterval: 0,
+
+              /// Loops back to first slide.
+              isLoop: true,
+
+            ),
+          ),
+          _header(context)
+        ],
+
+      );
   }
 
   _pressed_on_search(BuildContext context) async {

@@ -18,7 +18,7 @@ class Products {
   );
 
   Map<String, dynamic> toMap() => {
-    "products": List<dynamic>.from(products!.map((x) => x.toMap())),
+    "products": List<Product>.from(products!.map((x) => x.toMap())),
   };
 }
 

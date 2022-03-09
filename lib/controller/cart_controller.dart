@@ -44,41 +44,46 @@ class CartController extends GetxController{
 
   }
 
-  add_to_cart(Product product , int count){
-    // if(product.availability>0){
-    //   for(int i=0;i<my_order.length;i++){
-    //     if(my_order[i].product.value.id==product.id&&my_order[i].product.value.cart_details==product.cart_details){
-    //       my_order[i].quantity.value = my_order[i].quantity.value + count;
-    //       double x = (my_order[i].quantity.value * double.parse(product.price.toString())) as double;
-    //       my_order[i].price.value = x.toString();
-    //       get_total();
-    //       return ;
-    //     }
-    //   }
-    //   double x = (count * double.parse(product.price.toString())) as double;
-    //   Product new_product = Product(bodtHtml: product.bodtHtml, id: product.id, subCategoryId: product.subCategoryId, title: product.title, subTitle: product.subTitle, description: product.description, image: product.image, search: product.search, availability: product.availability, price: product.price, ratingCount: product.ratingCount, rate: product.rate, commingSoon: product.commingSoon, likes: product.likes);
-    //   new_product.cart_details=product.cart_details;
-    //   MyOrder myOrder = MyOrder(product:new_product.obs,quantity:count.obs,price:x.toString().obs);
-    //   my_order.add(myOrder);
-    //   get_total();
-    // }
+  bool add_to_cart(Product product,int selected_varient , int count,BuildContext context){
+    if(count<=product.variants![selected_varient].inventoryQuantity!){
 
-  }
-
-  add_to_rate(Product product , int count){
-    for(int i=0;i<rate.length;i++){
-      if(rate[i].product.value.id==product.id){
-        rate[i].quantity.value = rate[i].quantity.value + count;
-        // double x = (my_order[i].quantity.value * double.parse(product.price.toString())) as double;
-        rate[i].price.value = "0.0";
-        get_total();
-        return ;
+      for(int i=0;i<my_order.length;i++){
+        if(my_order[i].varient_id==product.variants![selected_varient].id){
+          if(my_order[i].quantity.value+count<=product.variants![selected_varient].inventoryQuantity!){
+            my_order[i].quantity.value=my_order[i].quantity.value+count;
+            my_order[i].price.value = product.variants!.first.price! + " X " + my_order[i].quantity.value.toString();
+            get_total();
+            return true;
+          }else{
+            App.error_msg(context, App_Localization.of(context)!.translate("out_of_stock"));
+            return false;
+          }
+        }
       }
+      my_order.add(MyOrder(product: product.obs,price: count == 1?(product.variants!.first.price!).obs:(product.variants!.first.price!+" X "+count.toString()).obs,quantity: count.obs,varient_id: product.variants![selected_varient].id!,color: product.variants![selected_varient].option1!,size: product.variants![selected_varient].option2!));
+      get_total();
+      return true;
+    }else{
+      App.error_msg(context, App_Localization.of(context)!.translate("out_of_stock"));
+      return false;
+
     }
-    // double x = (count * double.parse(product.price.toString())) as double;
-    MyOrder myOrder = MyOrder(product:product.obs,quantity:count.obs,price:"0.0".obs);
-    rate.add(myOrder);
   }
+
+  // add_to_rate(Product product , int count){
+  //   for(int i=0;i<rate.length;i++){
+  //     if(rate[i].product.value.id==product.id){
+  //       rate[i].quantity.value = rate[i].quantity.value + count;
+  //       // double x = (my_order[i].quantity.value * double.parse(product.price.toString())) as double;
+  //       rate[i].price.value = "0.0";
+  //       get_total();
+  //       return ;
+  //     }
+  //   }
+  //   // double x = (count * double.parse(product.price.toString())) as double;
+  //   MyOrder myOrder = MyOrder(product:product.obs,quantity:count.obs,price:"0.0".obs,);
+  //   rate.add(myOrder);
+  // }
 
   clear_cart(){
     my_order.clear();
@@ -86,7 +91,7 @@ class CartController extends GetxController{
   }
 
   increase(MyOrder myOrder,index){
-    // if(myOrder.product.value.availability>my_order[index].quantity.value){
+    // if(myOrder.product.>my_order[index].quantity.value){
       my_order[index].quantity.value++;
       double x =  (my_order[index].quantity.value * double.parse(my_order[index].product.value.variants!.first.price.toString())) as double;
       my_order[index].price.value=x.toString();
@@ -114,13 +119,13 @@ class CartController extends GetxController{
   get_total(){
     double x=0,y=0;
     for (var elm in my_order) {
-      x += double.parse(elm.price.value);
+      x +=( double.parse(elm.product.value.variants!.first.price!)*elm.quantity.value);
       // y += double.parse(elm.shipping.value);
     }
     y = (x*(Global.dis_code))/100;
     coupon.value=y.toString();
     sub_total.value=x.toString();
-    total.value = (x+double.parse(shipping.value.toString())-double.parse(coupon.value.toString())).toString();
+    // total.value = (x+double.parse(shipping.value.toString())-double.parse(coupon.value.toString())).toString();
     Store.save_order(my_order.value);
   }
 }

@@ -97,50 +97,55 @@ class _WishListState extends State<WishList> {
         onTap: (){
             // homeController.go_to_product_page(wishlistController.wishlist[index].id,"product_tag"+wishlistController.wishlist[index].id.toString()+"subcategorypage");
         },
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              flex: 7,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          wishlistController.wishlist[index].image.toString().replaceAll("localhost", "10.0.2.2")
+            Column(
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              wishlistController.wishlist[index].image!.src!
+                          ),
+                          fit: BoxFit.cover
                       ),
-                      fit: BoxFit.cover
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: GestureDetector(
-                          onTap: () {
-                            //wishlistController.wishlist.value = !wishlistController.wishlist.value;
-                            wishlistController.delete_from_wishlist(wishlistController.wishlist.value[index]);
-                            setState(() {
-                              wishlistController.loading.value = !wishlistController.loading.value;
-                              print(wishlistController.loading.value);
-                            });
-                          },
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                            size: 25,
-                          )
+                    ),
 
-                      )
-                  ),
+                  ),),
+                Expanded(
+                  flex: 1,
+                  child:_price(context,index),),
+                Expanded(
+                  child: _title(context,index),),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 7),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child:  GestureDetector(
+                    onTap: () {
+                      //wishlistController.wishlist.value = !wishlistController.wishlist.value;
+                      wishlistController.delete_from_wishlist(wishlistController.wishlist.value[index]);
+                      setState(() {
+                        wishlistController.loading.value = !wishlistController.loading.value;
+                        print(wishlistController.loading.value);
+                      });
+                    },
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: 25,
+                    )
+
                 ),
-              ),),
-            Expanded(
-              flex: 1,
-              child:  _price(context,index),),
-            Expanded(
-              child: _title(context,index),),
+              ),
+            )
           ],
         ),
       ),

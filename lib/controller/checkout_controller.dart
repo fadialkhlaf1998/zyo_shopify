@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/api.dart';
@@ -5,7 +7,9 @@ import 'package:zyo_shopify/const/app.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
+import 'package:zyo_shopify/model/conector.dart';
 import 'package:zyo_shopify/model/my_order.dart';
+import 'package:zyo_shopify/model/order.dart';
 import 'package:zyo_shopify/view/home.dart';
 
 class CheckoutController extends GetxController{
@@ -45,10 +49,31 @@ class CheckoutController extends GetxController{
 
   add_order(BuildContext context){
     // Api.add_order(Global.customer!.firstname, Global.customer!.lastname, address1.text, address2.text, city.text, country, state.text, phone_code+phone.text,get_details(cartController.my_order.value), double.parse(cartController.sub_total.value), double.parse(cartController.shipping.value), double.parse(cartController.total.value), false,cartController.coupon.toString());
-    cartController.clear_cart();
-    // App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
-    App.error_msg(context, "api");
-    Get.offAll(()=>Home());
+    // cartController.clear_cart();
+    validate.value=true;
+    print(phone.text);//todo +971
+    if(first_name.text.isEmpty||last_name.text.isEmpty||country.isEmpty||country=="non"||phone.text.isEmpty||state.text.isEmpty||city.text.isEmpty||address1.text.isEmpty||address2.text.isEmpty){
+
+
+    }else{
+    List<LineItem> lineItems=<LineItem>[];
+      for(var elm in cartController.my_order.value){
+        print(elm.varient_id);
+        print(elm.quantity);
+        lineItems.add(LineItem(elm.quantity.value,elm.varient_id));
+      }
+
+
+      Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
+        if(value){
+          App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
+          cartController.clear_cart();
+          Get.offAll(()=>Home());
+        }else{
+          App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
+        }
+      });
+    }
   }
 
   String get_details(List<MyOrder> my_order){
@@ -58,4 +83,18 @@ class CheckoutController extends GetxController{
     }
     return text;
   }
+}
+
+class LineItem {
+  int quantity;
+  int variantId;
+
+  LineItem(this.quantity, this.variantId);
+  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toMap() => {
+    "quantity": quantity,
+    "variant_id": variantId,
+  };
+
+
 }

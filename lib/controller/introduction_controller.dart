@@ -47,10 +47,17 @@ class IntroController extends GetxController {
           wishlistController.wishlist.value=wishlist;
           Connector.get_collections().then((collections0)  {
             collections=collections0;
+            // Connector.get_all_products().then((value) {
+              get_products().then((value) {
+                Future.delayed(Duration(milliseconds: 100)).then((value) {
+                  get_page();
+                });
+              // });
+
+            });
+         
           });
-          Future.delayed(Duration(milliseconds: 2500)).then((value) {
-            get_page();
-          });
+
         });
 
       }else{
@@ -61,11 +68,18 @@ class IntroController extends GetxController {
     });
 
   }
-
+  Future<bool> get_products() async {
+    for(int i=0;i<collections.length;i++){
+      collections[i].products.value.clear();
+      collections[i].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections[i].id!);
+    }
+    return true;
+  }
   get_page(){
     Store.loadLogInInfo().then((info) {
       if(info.email=="non"){
-        Get.offAll(()=>Registration());
+        // Get.offAll(()=>Registration());
+        Get.offAll(()=>Home());
       }else{
         Store.load_verificat().then((verify){
           if(verify){
@@ -77,7 +91,8 @@ class IntroController extends GetxController {
                     if(value!=null){
                       Get.offAll(()=>Home());
                     }else{
-                      Get.offAll(()=>Registration());
+                      Get.offAll(()=>Home());
+                      // Get.offAll(()=>Registration());
                     }
 
                   });
@@ -92,7 +107,8 @@ class IntroController extends GetxController {
             });
 
           }else{
-            Get.offAll(VerificatioCode());
+            // Get.offAll(VerificatioCode());
+            Get.offAll(()=>Home());
           }
         });
       }

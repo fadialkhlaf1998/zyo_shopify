@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:zyo_shopify/model/product.dart';
+
 class Collections {
   Collections({
     this.smartCollections,
@@ -50,6 +53,7 @@ class Collection {
   String? publishedScope;
   String? adminGraphqlApiId;
   CollectionImage? image;
+  RxList<Product> products = <Product>[].obs;
 
   factory Collection.fromJson(String str) => Collection.fromMap(json.decode(str));
 

@@ -31,7 +31,7 @@ class Categories extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   color: AppColors.main,
-                  child: SingleChildScrollView(
+                  child: Center(
                     child: Column(
                       children: [
                         _header(context),
@@ -184,29 +184,51 @@ class Categories extends StatelessWidget {
     return Column(
       children: [
         // _categories(context),
+        _categories(context),
         Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _sub_categories(context),
-              SizedBox(width: 10,),
-              _products_list(context)
+
+              homeController.selected_collection.length==0?Center():_sub_categories(context),
+              homeController.selected_collection.length==0?Center():SizedBox(width: 10,),
+              homeController.selected_collection.length==0?Padding(padding: EdgeInsets.symmetric(horizontal: 10),child: _products_list(context),):_products_list(context),
+             
             ],
           ),
         )
       ],
     );
   }
+  _categories(BuildContext context){
+    return Container(
+      height: 40,
+      child: ListView.builder(
+          itemCount: homeController.collections.length,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context,index){
+        return GestureDetector(
+          onTap: (){
+            homeController.get_sub_category(index);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 7),
+            child: Container(
+              child: Text(homeController.collections[index].title!,style: TextStyle(color: homeController.select_category.value==index?Colors.white:Colors.grey),),
+            ),
+          ),
+        );
 
+      }),
+    );
+  }
   _sub_categories(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width * 0.37,
-        height: MediaQuery.of(context).size.height*0.63,
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+        child: Center(
             child: ListView.builder(
-              itemCount: homeController.collections.length,
-              physics: NeverScrollableScrollPhysics(),
+              itemCount: homeController.selected_collection.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return Column(
@@ -222,20 +244,21 @@ class Categories extends StatelessWidget {
   _sub_categories_drawer(BuildContext context , int index) {
     return Obx(()=> GestureDetector(
       onTap: () {
-        categoriesController.select_sub_category.value = index;
-        homeController.get_product_by_sub_category(index);
+        // categoriesController.select_sub_category.value = index;
+        // homeController.get_product_by_sub_category(index);
+        homeController.get_product(index);
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.38,
         height: 50,
-        color: categoriesController.select_sub_category.value == index ?
+        color: homeController.selected_sub_category.value == index ?
         Colors.white :
         AppColors.main3,
         child: Center(
           child: Text(
-            homeController.collections.value[index].title.toString(),
+            homeController.selected_collection.value[index].title.toString(),
             style:  TextStyle(
-                color: categoriesController.select_sub_category.value == index ? AppColors.main3 : Colors.white,
+                color: homeController.selected_sub_category.value == index ? AppColors.main3 : Colors.white,
                 fontSize: 11,
             ),
           ),
@@ -245,28 +268,19 @@ class Categories extends StatelessWidget {
   }
   _products_list(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.58,
-      height: MediaQuery.of(context).size.height*0.64,
+      width:  homeController.selected_collection.length==0?MediaQuery.of(context).size.width-20:MediaQuery.of(context).size.width * 0.58,
+      height: MediaQuery.of(context).size.height*0.9-50-70,
       child: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  Text(App_Localization.of(context)!.translate("picks_for_you"),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),)
-                ],
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
+
               GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:  homeController.selected_collection.length==0?3:2,
                       childAspectRatio: 4/7,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10
@@ -304,7 +318,7 @@ class Categories extends StatelessWidget {
                                         // color: Colors.black
                                       ),
                                       child: Text(
-                                        homeController.products.value[index].variants!.first.price!+" "+App_Localization.of(context)!.translate("aed"),
+                                        homeController.products.value[index].variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,fontWeight: FontWeight.bold),
@@ -348,7 +362,7 @@ class Categories extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
               fit: BoxFit.fill,
-              image: NetworkImage(homeController.products[index].image.toString().replaceAll("localhost", "10.0.2.2")),
+              image: NetworkImage(homeController.products[index].image!.src!),
             ),
           ),
         ),

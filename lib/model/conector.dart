@@ -8,6 +8,8 @@ import 'package:zyo_shopify/model/collection.dart';
 import 'package:zyo_shopify/model/customer.dart';
 import 'package:zyo_shopify/model/order.dart';
 import 'package:zyo_shopify/model/product.dart';
+import 'package:http/http.dart' as http;
+import 'package:zyo_shopify/controller/checkout_controller.dart';
 
 class Connector{
 
@@ -89,31 +91,60 @@ class Connector{
       return <Collection>[];
     }
   }
-  static Future<List<Product>> get_products_by_Collection(String collection)async{
+  static Future<List<Product>> get_products_by_Collection(List<Product> wishlist,int collection)async{
     try {
       Response response = await Dio().get(
           url + "products.json",
           queryParameters:{
-            "tags":collection
+            "collection_id":collection
           }
       );
-      return Products.fromJson(response.toString()).products??<Product>[];
+      return get_favorite(wishlist,Products.fromJson(response.toString()).products??<Product>[]);
     }catch (e){
       return <Product>[];
     }
   }
-  static Future<List<Product>> get_products(int collection_id)async{
+  static Future<List<Product>> get_products(List<Product> wishlist,int collection_id)async{
     try {
+    print('*********-------***********');
       Response response = await Dio().get(
         url + "collections/$collection_id/products.json",
       );
-
-      return Products.fromJson(response.toString()).products??<Product>[];
+      print(response.toString());
+      List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
+      print('*********-------***********');
+      print(ps.length);
+      return get_favorite(wishlist,ps) ;
 
     }catch (e){
       return <Product>[];
     }
   }
+  static List<Product> get_favorite(List<Product> wishlist,List<Product> prods){
+
+    for(int i=0 ; i<wishlist.length;i++){
+      for(int j=0 ; j<prods.length;j++){
+        if(prods[j].id==wishlist[i].id){
+          prods[j].favorite.value=true;
+          wishlist[i]=prods[j];
+        }
+      }
+    }
+    return prods;
+  }
+  static Future<List<Product>> get_all_products()async{
+    try {
+      Response response = await Dio().get(
+        url + "products.json",
+      );
+      List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
+      return ps;
+
+    }catch (e){
+      return <Product>[];
+    }
+  }
+
   static Future<List<Order>> get_customer_orders(int cusomer_id)async{
     try {
       Response response = await Dio().get(
@@ -153,6 +184,9 @@ class Connector{
 
     }
   }
+
+
+
   static update_address(Customer customer,DefaultAddress defaultAddress)async{
     try {
     FormData form_data=FormData.fromMap(
@@ -216,4 +250,52 @@ class Connector{
     }
   }
 
+  static Future<bool> add_order(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
+      String phone,String city,String state,String country)async{
+
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var request = http.Request('POST', Uri.parse('https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2022-01/orders.json'));
+
+
+    var data= json.encode({
+      "order": {
+        "line_items": List<dynamic>.from(lineitems.map((x) => x.toMap())),
+        "gateway": "Cash on Delivery (COD)",
+        "payment_gateway_names": [
+          "Cash on Delivery (COD)"
+        ],
+        "shipping_address": {
+          "first_name": first_name,
+          "address1": address_1,
+          "address2": address_2,
+          "phone": "+971"+phone,
+          "city": city,
+          "province": state,
+          "country": country,
+          "last_name": last_name,
+          "name": first_name + " " + last_name
+        }
+      }
+    });
+    print(data);
+    request.body=data;
+    print(data);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      return true;
+    }
+    else {
+      return false;
+      print(response.reasonPhrase);
+    }
+
+  }
+
 }
+

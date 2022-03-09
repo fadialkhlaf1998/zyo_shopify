@@ -7,8 +7,11 @@ class MyOrder {
   Rx<Product> product;
   Rx<int> quantity;
   Rx<String> price;
+  String size;
+  String color;
+  int varient_id;
 
-  MyOrder({required this.product,required this.quantity,required this.price});
+  MyOrder({required this.product,required this.quantity,required this.price,required this.size,required this.color,required this.varient_id});
   factory MyOrder.fromJson(String str) => MyOrder.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
@@ -17,33 +20,18 @@ class MyOrder {
     product: Product.fromJson(json["product"]).obs,
     quantity: int.parse(json["quantity"].toString()).obs,
     price: json["price"].toString().obs,
+    size: json["size"].toString(),
+    color: json["color"].toString(),
+    varient_id: int.parse(json["varient_id"].toString()),
   );
 
   Map<String, dynamic> toMap() => {
     "product": product.value,
     "quantity": quantity.value,
     "price": price.value,
+    "size":size,
+    "color":color,
+    "varient_id":varient_id,
   };
 
-}
-
-class LineItem {
-  int id;
-  int quantity;
-
-  LineItem({required this.id, required this.quantity});
-
-  factory LineItem.fromJson(String str) => LineItem.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory LineItem.fromMap(Map<String, dynamic> json) => LineItem(
-    id: json['id'],
-    quantity: json['quantity'],
-  );
-
-  Map<String, dynamic> toMap() => {
-    "quantity": quantity,
-    "id": id,
-  };
 }

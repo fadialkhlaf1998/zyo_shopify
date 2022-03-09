@@ -10,6 +10,7 @@ import 'package:zyo_shopify/controller/sub_category_controller.dart';
 import 'package:zyo_shopify/controller/wishlist_controller.dart';
 import 'package:zyo_shopify/model/4th_sub_category.dart';
 import 'package:zyo_shopify/model/collection.dart';
+import 'package:zyo_shopify/model/conector.dart';
 import 'package:zyo_shopify/model/home_page.dart';
 import 'package:zyo_shopify/model/product.dart';
 import 'package:zyo_shopify/model/sub_categories.dart';
@@ -27,7 +28,9 @@ class HomeController extends GetxController {
   RxList<Collection> collections = <Collection>[].obs;
   RxList<Collection> men = <Collection>[].obs;
   RxList<Collection> women = <Collection>[].obs;
+  RxList<Collection> selected_collection = <Collection>[].obs;
   RxList<Product> products = <Product>[].obs;
+  Rx<int> selected_sub_category = 0.obs;
   // List<FourthSubCategory> forthSubCategory = <FourthSubCategory>[];
   // HomePage homePage=HomePage( category: <Category>[], slider: <MySlider>[], comingSoon: <ComingSoon>[],flashSale: <FlashSale>[],home_page_products: <Product>[],new_products: <Product>[],ages: <Brands>[],unisex: <Brands>[]);
   var select_nav_bar = 0.obs;
@@ -56,11 +59,20 @@ class HomeController extends GetxController {
         bool added = false;
         for(int j=0;j<introController.collections[i].rules!.length;j++){
           if(introController.collections[i].rules![j].condition!.toLowerCase()=="women"&&introController.collections[i].title!.toLowerCase()!="women"){
-            women.add(introController.collections[i]);
+            if(introController.collections[i].title!.toLowerCase().contains("see")){
+              women.insert(0,introController.collections[i]);
+            }else{
+              women.add(introController.collections[i]);
+            }
             added=true;
             break;
           }else if(introController.collections[i].rules![j].condition!.toLowerCase()=="men"&&introController.collections[i].title!.toLowerCase()!="men"){
-            men.add(introController.collections[i]);
+            if(introController.collections[i].title!.toLowerCase().contains("see")){
+              men.insert(0,introController.collections[i]);
+            }else{
+              men.add(introController.collections[i]);
+            }
+
             added=true;
             break;
           }
@@ -68,13 +80,19 @@ class HomeController extends GetxController {
         if(added==true){
           added=false;
         }else{
-          collections.add(introController.collections[i]);
+          if(introController.collections[i].title!.toLowerCase()=="men"||introController.collections[i].title!.toLowerCase()=="women"){
+            collections.insert(0,introController.collections[i]);
+          }else{
+            collections.add(introController.collections[i]);
+          }
+
         }
       }
     }
     // collections.value=introController.collections;
-    print(collections.length);
-    products.value=introController.products;
+    get_sub_category(0);
+    // print(collections.length);
+    // products.value=introController.products;
     // get_fourth(introController.subCategory);
   }
 
@@ -105,24 +123,52 @@ class HomeController extends GetxController {
   }
 
   get_sub_category(int index){
-    // App.error_msg(context, "api");
-    print('API');
-    // Api.check_internet().then((net) {
-    //   if(net){
-    //     loading.value=true;
-    //     Api.get_sub_category(homePage.category[index].id).then((value) {
-    //       subCategory.value=value.subCategory;
-    //       get_fourth(value.subCategory);
-    //
-    //     });
-    //   }else{
-    //     Get.to(NoInternet())!.then((value) {
-    //       get_sub_category(index);
-    //     });
-    //   }
-    // });
-
+    select_category.value=index;
+    if(collections[index].title!.toLowerCase()=="men"){
+      selected_collection=men;
+      products.value=men.first.products;
+      // get_product_by_collection(selected_collection.first.id!);
+    }else if(collections[index].title!.toLowerCase()=="women"){
+      selected_collection=women;
+      products.value=women.first.products;
+      // get_product_by_collection(selected_collection.first.id!);
+    }else{
+      selected_collection=<Collection>[].obs;
+      products.value=collections[select_category.value].products;
+      // get_product_by_collection(collections[select_category.value].id!);
+    }
   }
+
+  get_product (int index){
+    loading.value=false;
+    selected_sub_category.value=index;
+    products.value=selected_collection[index].products;
+    print(products.length);
+  }
+
+  go_to_product(Product product,String tag){
+    Get.to(()=>ProductInfo(product, tag));
+  }
+
+  // get_product_by_collection(int title){
+  //   print(title);
+  //   Connector.check_internet().then((net) {
+  //     if(net){
+  //       loading.value=true;
+  //       Connector.get_products_by_Collection(title).then((value){
+  //         products.value=value;
+  //         loading.value=false;
+  //       }).catchError((err){
+  //         print(err);
+  //         loading.value=false;
+  //       });
+  //     }else{
+  //       Get.to(NoInternet())!.then((value) {
+  //         get_product_by_collection(title);
+  //       });
+  //     }
+  //   });
+  // }
 
   get_sub_category_and_product(int index){
     // App.error_msg(context, "api");

@@ -68,8 +68,8 @@ class Settings extends StatelessWidget {
   _body(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20,),
-        _personal_info(context),
+        //SizedBox(height: 20,),
+        //_personal_info(context),
         SizedBox(height: 20,),
         _addess_pass_account(context),
         SizedBox(height: 20,),
@@ -160,38 +160,38 @@ class Settings extends StatelessWidget {
             //   thickness: 1,
             //   color: AppColors.main2,
             // ),
-            SizedBox(height: 20,),
-            GestureDetector(
-              onTap: () {
-                if(Global.customer==null){
-                  Get.offAll(()=> Registration());
-                }else{
-                  Get.to(()=> ChangePassword());
-                }
-              },
-              child: Container(
-                color: AppColors.main3,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10,right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(App_Localization.of(context)!.translate("change_password"),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18
-                        ),),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.arrow_forward_ios,color: Colors.white,size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+           // SizedBox(height: 20,),
+            // GestureDetector(
+            //   onTap: () {
+            //     if(Global.customer==null){
+            //       Get.offAll(()=> Registration());
+            //     }else{
+            //       Get.to(()=> ChangePassword());
+            //     }
+            //   },
+            //   child: Container(
+            //     color: AppColors.main3,
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(left: 10,right: 10),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text(App_Localization.of(context)!.translate("change_password"),
+            //             style: TextStyle(
+            //                 color: Colors.white,
+            //                 fontSize: 18
+            //             ),),
+            //           Padding(
+            //             padding: const EdgeInsets.only(right: 10),
+            //             child: Icon(
+            //               Icons.arrow_forward_ios,color: Colors.white,size: 20,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             // Divider(
             //   thickness: 1,
             //   color: AppColors.main2,
@@ -244,8 +244,8 @@ class Settings extends StatelessWidget {
               color: AppColors.main2,
             ),
             _lang(context),
-            SizedBox(height: 20,),
-            _currency(context)
+            // SizedBox(height: 20,),
+            // _currency(context)
           ],
         )
     );
@@ -470,7 +470,7 @@ class Settings extends StatelessWidget {
               ],
             ),
             ),
-            SizedBox(height: 10),
+            //SizedBox(height: 10),
           ],
         ),
       ),

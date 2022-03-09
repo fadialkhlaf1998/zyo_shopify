@@ -76,8 +76,8 @@ class Cart extends StatelessWidget {
         _cart(context),
         _totals(context),
         SizedBox(height: 40),
-        _code(context),
-        SizedBox(height: 100),
+        // _code(context),
+        // SizedBox(height: 100),
         _footer(context),
         SizedBox(height: 20),
 
@@ -92,131 +92,94 @@ class Cart extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: cartController.my_order.length,
         itemBuilder: (context, index) {
-          return Column(
+          return Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(cartController.my_order.value[index].product.value.image!.src!),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: Text(
-                            cartController.my_order[index].product.value.title!,
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                color: Colors.white,
-                                fontSize: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(cartController.my_order.value[index].product.value.image!.src!),
                           ),
-                        )),
-                        Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Text(
-                                cartController.my_order[index].product.value.variants!.first.price!+" "+ App_Localization.of(context)!.translate(Global.currency_code),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight:
-                                    FontWeight.bold),
-                              ),
-                            ),),
-                        Expanded(
-                            flex: 1,
-                            child:  Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-
-                            ),),
-                        Row(
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Center(
-                                child:  Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text("static",
-                                    style: TextStyle(fontSize: 12),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  child: Text(
+                                    cartController.my_order[index].product.value.title!,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.white,
+                                        fontSize: 12),
+                                    maxLines: 2,
                                   ),
-                                ),
-                              )
-                            ),
-
-                            Container(
-                              height: 30,
-
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                border: Border.all(color: Colors.white , width: 1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      cartController.decrease(cartController.my_order[index], index);
-                                    },
-                                    icon: Icon(
-                                      Icons.remove,
-                                      size: 15,
-                                    ), color: Colors.white,
-                                  ),
-                                  Obx((){
-                                    return
-                                      Text(cartController.my_order[index].quantity.value.toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,),
-                                      );
-                                  }),
-
-                                  IconButton(
-                                    onPressed: () {
-                                      cartController.increase(cartController.my_order[index], index);
-                                    },
-                                    icon: Icon(
-                                      Icons.add,
-                                      size: 15,
+                                )),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      cartController.my_order[index].price.value+" "+ App_Localization.of(context)!.translate(Global.currency_code),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight:
+                                          FontWeight.bold),
                                     ),
-                                    color: Colors.white,)
-                                ],
-                              ),
-                            ),
+                                    Text(App_Localization.of(context)!.translate("color") + ": " +cartController.my_order[index].color,
+                                      style: TextStyle(fontSize: 12,color: Colors.white),
+                                    ),
+                                    Text(App_Localization.of(context)!.translate("size") + ": " +cartController.my_order[index].size,
+                                      style: TextStyle(fontSize: 12,color: Colors.white),
+                                    ),
+
+                                  ],
+                                ),
+                              ),),
 
                           ],
                         ),
-                      ],
-                    ),
-                  )
+                      ),
+
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Divider(
+                    color: Colors.white,
+                    thickness: 1,
+                  ),
+                  SizedBox(height: 10,),
                 ],
               ),
-              SizedBox(height: 10,),
-              Divider(
-                color: Colors.white,
-                thickness: 1,
-              ),
-              SizedBox(height: 10,),
+              Positioned(
+                bottom: 20,
+                right: 0,
+                child: IconButton(
+                  icon: Icon(Icons.delete,color: Colors.white,),
+                  onPressed: (){
+                      cartController.remove_from_cart(cartController.my_order[index]);
+                  },
+                ),
+              )
             ],
           );
           //return _cart_item(context, index);
@@ -246,77 +209,91 @@ class Cart extends StatelessWidget {
         const SizedBox(height: 20),
         _sub_total(context),
         const SizedBox(height: 20),
-        _shipping(context),
+        // _shipping(context),
         Global.dis_code==0?Center():const SizedBox(height: 20),
         Global.dis_code==0?Center():_coupon(context),
         Global.dis_code==0?Center():const SizedBox(height: 20),
         Global.dis_code==0?Center():_dicount(context),
         const SizedBox(height: 20),
-        _total(context)
+        // _total(context)
       ],
     );
   }
   _sub_total(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                App_Localization.of(context)!.translate("sub_total"),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    App_Localization.of(context)!.translate("sub_total"),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15
+                    ),
+                  ),
+
+                ],
               ),
-            ],
-          ),
-          SizedBox(width: 5),
-          Flexible(
-            flex: 1,
-            fit: FlexFit.loose,
-            child: LayoutBuilder(
-              builder: (BuildContext context,
-                  BoxConstraints constraints) {
-                final boxWidth = constraints.constrainWidth();
-                final dashWidth = 4.0;
-                final dashHeight = 2.0;
-                final dashCount =
-                (boxWidth / (2 * dashWidth)).floor();
-                return Flex(
-                  children: List.generate(dashCount, (_) {
-                    return SizedBox(
-                      width: dashWidth,
-                      height: dashHeight,
-                      child: DecoratedBox(
-                        decoration:
-                        BoxDecoration(color: Colors.white),
-                      ),
+              SizedBox(width: 5),
+              Flexible(
+                flex: 1,
+                fit: FlexFit.loose,
+                child: LayoutBuilder(
+                  builder: (BuildContext context,
+                      BoxConstraints constraints) {
+                    final boxWidth = constraints.constrainWidth();
+                    final dashWidth = 4.0;
+                    final dashHeight = 2.0;
+                    final dashCount =
+                    (boxWidth / (2 * dashWidth)).floor();
+                    return Flex(
+                      children: List.generate(dashCount, (_) {
+                        return SizedBox(
+                          width: dashWidth,
+                          height: dashHeight,
+                          child: DecoratedBox(
+                            decoration:
+                            BoxDecoration(color: Colors.white),
+                          ),
+                        );
+                      }),
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      direction: Axis.horizontal,
                     );
-                  }),
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                  direction: Axis.horizontal,
-                );
-              },
-            ),
-          ),
-          SizedBox(width: 5,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                (double.parse(cartController.sub_total.value)*Global.currency_covert).toStringAsFixed(2)+" "+App_Localization.of(context)!.translate(Global.currency_code),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15
+                  },
                 ),
               ),
+              SizedBox(width: 5,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    (double.parse(cartController.sub_total.value)*Global.currency_covert).toStringAsFixed(2)+" "+App_Localization.of(context)!.translate(Global.currency_code),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15
+                    ),
+                  ),
+                ],
+              ),
             ],
+          ),
+          Text(
+            App_Localization.of(context)!.translate("tax_shipping"),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+              fontWeight: FontWeight.bold
+            ),
           ),
         ],
       ),
@@ -657,11 +634,11 @@ class Cart extends StatelessWidget {
   _footer(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(Global.customer==null){
-          Get.to(()=>Registration());
-        }else if(cartController.my_order.isNotEmpty){
+        // if(Global.customer==null){
+        //   Get.to(()=>Registration());
+        // }else if(cartController.my_order.isNotEmpty){
           Get.to(()=>CheckoutChoise());
-        }
+        // }
       },
       child: Container(
         color: Colors.white,

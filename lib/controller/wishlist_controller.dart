@@ -14,12 +14,12 @@ class WishListController extends GetxController{
 
   add_to_wishlist(Product product,BuildContext context){
     App.sucss_msg(context, App_Localization.of(context)!.translate("wishlist_msg"));
-    // product.favorite.value=true;
+    product.favorite.value=true;
     wishlist.value.add(product);
     Store.save_wishlist(wishlist.value);
   }
   delete_from_wishlist(Product product){
-    // product.favorite.value=false;
+    product.favorite.value=false;
     for( int i=0 ;i < wishlist.length ; i++){
       if(wishlist.value[i].id==product.id){
         wishlist.value.removeAt(i);

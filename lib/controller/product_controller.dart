@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zyo_shopify/model/product.dart';
 
 class ProductController extends GetxController {
 
@@ -10,12 +11,15 @@ class ProductController extends GetxController {
   var ratingValue = 0.0.obs;
   GlobalKey<ScaffoldState> key =  GlobalKey<ScaffoldState>();
   var selected = 0.obs;
-  var select_color = 0.obs;
-  var select_size = 0.obs;
+  var select_color = "0".obs;
+  var select_size = "0".obs;
+  Rx<Variant>? selected_varient ;
+  int selected_varient_index=0 ;
   var checked = true.obs;
   var ratingValue2 = 0.0.obs;
   var selected_sub_product = 0.obs;
   TextEditingController review_controller = TextEditingController();
+
 
   List<Color> colors = [
     Colors.blueGrey, Colors.red, Colors.blue, Colors.brown,].obs as List<Color>;

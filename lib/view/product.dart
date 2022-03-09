@@ -28,17 +28,165 @@ class ProductInfo extends StatelessWidget {
   WishListController wishListController = Get.find();
   CartController cartController = Get.find();
   ProductInfo(this.product,this.tag){
-    for(int i=0;i<wishListController.wishlist.length;i++){
-      if(wishListController.wishlist[i].id==product.id){
-        product.favorite.value=true;
-        break;
-      }
-    }
+    productController.select_size.value=product.options![1].values!.first;
+    productController.select_color.value=product.options![0].values!.first;
+    get_varint();
+    // for(int i=0;i<wishListController.wishlist.length;i++){
+    //   if(wishListController.wishlist[i].id==product.id){
+    //     product.favorite.value=true;
+    //     break;
+    //   }
+    // }
 
   }
-
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        body:Obx(()=> SafeArea(
+          child: Container(
+              child:Column(
+                children: [
+                  Stack(
+                    children: [
+                      _slider_images(context),
+                      _header(context),
+                    ],
+                  ),
+                  _black_body(context),
+                 
+                ],
+              )
+          ),
+        ))
+    );
+  }
+
+  Variant? get_varint(){
+    for(int i=0 ; i< product.variants!.length;i++){
+      if(product.variants![i].option1==productController.select_color.value&&product.variants![i].option2==productController.select_size.value){
+        productController.selected_varient=product.variants![i].obs;
+        print(productController.selected_varient!.value.id);
+        productController.selected_varient_index=i;
+        return product.variants![i];
+      }
+    }
+    return null;
+  }
+  _black_body(BuildContext context){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height*0.4-MediaQuery.of(context).padding.top,
+      color: AppColors.main,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(product.variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+            Text(product.title!,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.4,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white)
+                    ),
+                    child:DropdownButton<String>(
+                      icon: Icon(Icons.add,color: Colors.transparent,size: 0),
+                      style: TextStyle(color: Colors.black),
+                      hint: Container(
+                        width:MediaQuery.of(context).size.width*0.4-5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(App_Localization.of(context)!.translate("size"),style: TextStyle(color: Colors.white),),
+                            SizedBox(width: 1,),
+                            SizedBox(width: 1,),
+                            Text(productController.select_size.value,style: TextStyle(color: Colors.white),),
+                          ],
+                        ),
+                      ) ,
+                      underline: Container(height: 0,),
+                      items: product.options![1].values!.map((e) {
+                        return DropdownMenuItem<String>(
+                          value: e,
+                          child: Text(e),
+                        );
+                      }).toList(),
+                      onChanged: (e) {
+                        print(e);
+                        productController.select_size.value=e.toString();
+                        get_varint();
+                        // productController.select_size.value=product.options![1].values.indexOf(e);
+                    },
+                    ),
+                  ),
+                Container(
+                  width: MediaQuery.of(context).size.width*0.4,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white)
+                  ),
+                  child:DropdownButton<String>(
+                    icon: Icon(Icons.add,color: Colors.transparent,size: 0),
+                    style: TextStyle(color: Colors.black),
+                    hint: Container(
+                      width:MediaQuery.of(context).size.width*0.4-5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(App_Localization.of(context)!.translate("color"),style: TextStyle(color: Colors.white),),
+                          SizedBox(width: 1,),
+                          SizedBox(width: 1,),
+                          Text(productController.select_color.value,style: TextStyle(color: Colors.white),),
+                        ],
+                      ),
+                    ) ,
+                    underline: Container(height: 0,),
+                    items: product.options![0].values!.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e,
+                        child: Text(e),
+                      );
+                    }).toList(),
+                    onChanged: (e) {
+                      print(e);
+                      productController.select_color.value=e.toString();
+                      get_varint();
+                      // productController.select_size.value=product.options![1].values.indexOf(e);
+                    },
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    cartController.add_to_cart(product, productController.selected_varient_index, 1,context);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*0.4,
+                    height: 40,
+                    color: Colors.white,
+                    child:Center(
+                      child: Text(App_Localization.of(context)!.translate("add_to_bag"),style: TextStyle(color: AppColors.main,fontWeight: FontWeight.bold),),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget build0(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.main,
       body: Obx(()=> SafeArea(
@@ -87,85 +235,74 @@ class ProductInfo extends StatelessWidget {
 
   _header(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.93,
+      width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.1,
-      child:  Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                  )
-              )
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child:  Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child:  SvgPicture.asset("assets/logo/logo.svg",),
+                GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                    )
                 )
-
               ],
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Stack(
-                    children: [
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(()=>Cart());
-                            },
-                            child: Container(
-                                height: 50,
-                                width: 20,
-                                child: Icon(Icons.shopping_bag_outlined,color: Colors.white,)),
-                          ),
-                        ],
-                      ),
-                      Positioned(
-                          top: 28,
-                          child: cartController.my_order.length==0?Center():Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(10)
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Stack(
+                      children: [
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(()=>Cart());
+                              },
+                              child: Container(
+                                  height: 50,
+                                  width: 20,
+                                  child: Icon(Icons.shopping_bag_outlined,color: Colors.black,)),
                             ),
-                            child: Center(
-                              child: Text(cartController.my_order.length.toString(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 7,
-                                    fontWeight: FontWeight.bold
-                                ),),
-                            ),
-                          ))
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
+                          ],
+                        ),
+                        Positioned(
+                            top: 28,
+                            child: cartController.my_order.length==0?Center():Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Center(
+                                child: Text(cartController.my_order.length.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 7,
+                                      fontWeight: FontWeight.bold
+                                  ),),
+                              ),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -246,7 +383,7 @@ class ProductInfo extends StatelessWidget {
           CarouselSlider.builder(
             carouselController: productController.controller,
             options: CarouselOptions(
-                height: MediaQuery.of(context).size.height * 0.67,
+                height: MediaQuery.of(context).size.height * 0.6,
                 autoPlay:product.images!.length!=0
                     ? true
                     : false,
@@ -275,36 +412,45 @@ class ProductInfo extends StatelessWidget {
           ),
           Positioned(
             bottom: 20,
-            left: 5,
-            right: 5,
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 SizedBox(width: 50),
                   Column(
                     children: [
-                      Center(
-                            child: Text(
-                              (productController.activeIndex.value+1).toString()+
-                                  "/" +
-                                  product.images!.length.toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                              ),)
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: AppColors.main
+                              ),
+                              child:   Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 3),
+                                    child: Text(
+                                      (productController.activeIndex.value+1).toString()+
+                                          "/" +
+                                          product.images!.length.toString(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                  )
+                              ),
+                            )
+                          
+                          ],
                         ),
+                      ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Row(
-                      children: [
-                        Icon(Icons.favorite, color: Colors.red,size: 30,),
-                      ],
-                    ),
-                  )
+
                 ],
               ),
             )

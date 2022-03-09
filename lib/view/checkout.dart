@@ -202,6 +202,72 @@ class Checkout extends StatelessWidget {
           SizedBox(height: 10),
           Container(
             width: MediaQuery.of(context).size.width * 0.93,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: TextField(
+                    style: TextStyle(color: Colors.white),
+                    controller: checkoutController.first_name,
+                    cursorColor: Colors.white,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      focusedErrorBorder: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorText:
+                      checkoutController.validate.value && checkoutController.first_name.text.isEmpty ?
+                      App_Localization.of(context)!.translate("first_name_is_required") : null,
+                      errorBorder: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.red)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.main2),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.main2),
+                      ),
+                      hintText: App_Localization.of(context)!.translate("first_name"),
+                      hintStyle: TextStyle(color: Colors.white,fontSize: 16),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: TextField(
+                    style: TextStyle(color: Colors.white),
+                    controller: checkoutController.last_name,
+                    cursorColor: Colors.white,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      focusedErrorBorder: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorText:
+                      checkoutController.validate.value && checkoutController.last_name.text.isEmpty ?
+                      App_Localization.of(context)!.translate("last_name_is_required") : null,
+                      errorBorder: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.red)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.main2),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.main2),
+                      ),
+                      hintText: App_Localization.of(context)!.translate("last_name"),
+                      hintStyle: TextStyle(color: Colors.white,fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 10),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.93,
             child: TextField(
               style: TextStyle(color: Colors.white),
               controller: checkoutController.state,
@@ -357,7 +423,6 @@ class Checkout extends StatelessWidget {
   _save(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //todo make order
         checkoutController.add_order(context);
       },
       child: Container(
