@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
@@ -27,6 +28,10 @@ class Languages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
         backgroundColor: AppColors.main,
       body: Obx(() => SafeArea(

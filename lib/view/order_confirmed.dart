@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
@@ -9,6 +10,10 @@ class OrderConfirmed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     Future.delayed(Duration(milliseconds: 3000)).then((value) {
       Get.to(() => Home());
     });

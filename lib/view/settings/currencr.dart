@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/api.dart';
 import 'package:zyo_shopify/const/app.dart';
@@ -14,6 +15,10 @@ class CurrencyView extends StatelessWidget {
   Settings_controlller settings_controlller = Get.find();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
         backgroundColor: AppColors.main,
         body: SafeArea(

@@ -1,6 +1,7 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/api.dart';
 import 'package:zyo_shopify/const/global.dart';
@@ -28,6 +29,10 @@ class Settings extends StatelessWidget {
   HomeController homeController = Get.find();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       backgroundColor: AppColors.main,
       body: WillPopScope(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
@@ -19,6 +20,10 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
         backgroundColor: AppColors.main,
       body: WillPopScope(
@@ -359,8 +364,7 @@ class Categories extends StatelessWidget {
   _products(BuildContext context , int index) {
     return GestureDetector(
       onTap: () {
-       //Get.to(()=>ProductInfo(homeController.products[index]));
-        homeController.go_to_product_page(homeController.products[index].id!,"product_tag"+homeController.products[index].id.toString()+"categorypage");
+        homeController.go_to_product(homeController.products[index]);
       },
       child:  Container(
         decoration: BoxDecoration(
