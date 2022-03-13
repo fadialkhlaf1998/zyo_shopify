@@ -1,7 +1,4 @@
 import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,13 +9,9 @@ import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
 import 'package:zyo_shopify/controller/home_controller.dart';
 import 'package:zyo_shopify/controller/wishlist_controller.dart';
-import 'package:zyo_shopify/model/sub_categories.dart';
 import 'package:zyo_shopify/view/cart.dart';
 import 'package:zyo_shopify/view/categories.dart';
-import 'package:zyo_shopify/view/new_collection.dart';
-import 'package:zyo_shopify/view/product.dart';
 import 'package:zyo_shopify/view/settings.dart';
-import 'package:zyo_shopify/view/sub_category.dart';
 import 'package:zyo_shopify/view/wishlist.dart';
 
 class Home extends StatelessWidget {
@@ -40,7 +33,6 @@ class Home extends StatelessWidget {
       body: Obx(() {
         return  homeController.select_nav_bar == 0 ? _home(context) :
         homeController.select_nav_bar == 1 ? Categories() :
-        // homeController.select_nav_bar == 2 ? NewCollection() :
         homeController.select_nav_bar == 2 ? WishList() : Settings();
       }),
     );
@@ -49,7 +41,6 @@ class Home extends StatelessWidget {
   _btnNavBar(BuildContext context) {
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width,
-      height: 55,
       child: BottomNavigationBar(
         mouseCursor: SystemMouseCursors.grab,
         type: BottomNavigationBarType.fixed,
@@ -155,8 +146,10 @@ class Home extends StatelessWidget {
                   controller: _scrollController,
                   child: Column(
                     children: [
-                      // SizedBox(height: MediaQuery.of(context).size.height * 0.12,),
-                      _slider(context),
+
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.12,),
+                      // _slider(context),
+                      _raduce_category(context),
                       homeController.selected_collection.value.length==0?
                       Center()
                       :_sub_category(context),
@@ -165,6 +158,7 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
+              Positioned(child:   _header(context),),
               Positioned(child: homeController.loading.value?Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -183,7 +177,7 @@ class Home extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width ,
       height: MediaQuery.of(context).size.height *0.12,
-      color: Colors.transparent,
+      color: AppColors.main,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -350,8 +344,8 @@ class Home extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               itemCount: homeController.products.value.length,
               gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 4/6,
+                crossAxisCount: 3,
+                childAspectRatio: 4/7,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 20
               ),
@@ -360,50 +354,47 @@ class Home extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        homeController.go_to_product(homeController.products[index], "home"+homeController.products[index].id.toString());
+                        homeController.go_to_product(homeController.products[index]);
                       },
-                      child: Hero(
-                        tag: "home"+homeController.products[index].id.toString(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                                Expanded(
-                                  flex: 5,
-                                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                              Expanded(
+                                flex: 5,
+                                  child: Container(
 
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                        image: DecorationImage(
-                                          image: NetworkImage(homeController.products.value[index].image!.src!,),
-                                          fit: BoxFit.fill
-                                        )
-                                      ),
-                                    )
-                                ),
-
-                            Expanded(
-                                flex: 2,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-
-                                       Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(homeController.products.value[homeController.selected_sub_category.value].variants!.first.price!+" "+ App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 11,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-
-                                        ],
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      image: DecorationImage(
+                                        image: NetworkImage(homeController.products.value[index].image!.src!,),
+                                        fit: BoxFit.contain
                                       )
-                                    ],
-                                  ),
-                                )
-                            ),
-                          ],
-                        ),
+                                    ),
+                                  )
+                              ),
+
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                     Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(homeController.products.value[homeController.selected_sub_category.value].variants!.first.price!+" "+ App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 11,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
+                          ),
+                        ],
                       ),
                     ),
                     Positioned(
@@ -425,36 +416,6 @@ class Home extends StatelessWidget {
   }
   _slider(BuildContext context){
     return
-      // CarouselSlider(
-      //     items: homeController.collections.map((e){
-      //       //
-      //     return Container(
-      //         // margin: EdgeInsets.all(5.0),
-      //         child: ClipRRect(
-      //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      //       child: Stack(children: <Widget>[
-      //       InkResponse(
-      //       child: Image.network(e.image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":e.image!.src!,
-      //       fit: BoxFit.cover, width: 1000.0),)])));
-      //   }).toList(),
-      //     options: CarouselOptions(
-      //       height: MediaQuery.of(context).size.height*0.6,
-      //       initialPage: 0,
-      //       enableInfiniteScroll: true,
-      //       reverse: false,
-      //       autoPlay: false,
-      //       autoPlayInterval: Duration(seconds: 3),
-      //       autoPlayAnimationDuration: Duration(milliseconds: 800),
-      //       autoPlayCurve: Curves.fastOutSlowIn,
-      //       enlargeCenterPage: true,
-      //       onPageChanged: (val,index){
-      //         homeController.select_category.value=val;
-      //           homeController.get_sub_category(val);
-      //       },
-      //       scrollDirection: Axis.horizontal,
-      //
-      //     )
-      // );
       Stack(
         children: [
           Container(
@@ -526,15 +487,66 @@ class Home extends StatelessWidget {
       );
   }
 
+  _raduce_category(BuildContext context){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height*0.2,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: homeController.collections.value.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context , index){
+            return GestureDetector(
+              onTap: (){
+                homeController.select_category.value=index;
+                homeController.get_sub_category(index);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  width: MediaQuery.of(context).size.height*0.2-40,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height*0.2-40,
+                        width: MediaQuery.of(context).size.height*0.2-40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(homeController.collections.value[index].image==null?"https://w0.peakpx.com/wallpaper/611/707/HD-wallpaper-nazriya-nose-hair.jpg":homeController.collections.value[index].image!.src!),
+                            fit: BoxFit.fill
+                          )
+                        ),
+                      ),
+                      Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.height*0.2-40,
+                        child: Center(
+                          child: Text(homeController.collections.value[index].title!,style: TextStyle(fontWeight: FontWeight.bold,color:homeController.select_category.value==index?Colors.white:Colors.grey ),maxLines: 2,textAlign: TextAlign.center,),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
   _pressed_on_search(BuildContext context) async {
     final result = await showSearch(
         context: context,
         delegate: SearchTextField(suggestion_list: Global.suggestion_list,homeController: homeController));
-    homeController.go_to_search_page(result!);
-    print(result);
+    // homeController.go_to_search_page(result!);
+    // print(result);
   }
 
 }
+
+
+
 
 class SearchTextField extends SearchDelegate<String> {
   final List<String> suggestion_list;
@@ -593,8 +605,8 @@ class SearchTextField extends SearchDelegate<String> {
     final suggestions = suggestion_list.where((name) {
       return name.toLowerCase().contains(query.toLowerCase());
     });
-    homeController.go_to_search_page(query);
-    close(context, query);
+    // homeController.go_to_search_page(query);
+    // close(context, query);
     return Container(
       color: Colors.black,
       child: Center(
@@ -607,8 +619,8 @@ class SearchTextField extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = suggestion_list.where((name) {
-      return name.toLowerCase().contains(query.toLowerCase());
+    final suggestions = homeController.all_products.value.where((elm) {
+      return elm.title!.toLowerCase().contains(query.toLowerCase());
     });
     return Container(
       color: AppColors.main,
@@ -617,12 +629,27 @@ class SearchTextField extends SearchDelegate<String> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             title: Text(
-              suggestions.elementAt(index),
+              suggestions.elementAt(index).title!,
               style: TextStyle(color: AppColors.main2),
             ),
+            subtitle: Text(
+              suggestions.elementAt(index).tags!,
+              style: TextStyle(color: AppColors.main2.withOpacity(0.5),fontSize: 12),
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: NetworkImage(suggestions.elementAt(index).image!.src!)
+                    )
+                ),
+              ),
+            ),
             onTap: () {
-              query = suggestions.elementAt(index);
-              close(context, query);
+              query = suggestions.elementAt(index).title!;
+              homeController.go_to_product(suggestions.elementAt(index));
             },
           );
         },

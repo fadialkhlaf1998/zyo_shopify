@@ -7,7 +7,7 @@ class MyOrder {
   Rx<Product> product;
   Rx<int> quantity;
   Rx<String> price;
-  String size;
+  String? size;
   String color;
   int varient_id;
 

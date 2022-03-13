@@ -45,6 +45,8 @@ class CartController extends GetxController{
   }
 
   bool add_to_cart(Product product,int selected_varient , int count,BuildContext context){
+    print(selected_varient);
+    print(product.variants![selected_varient].id!);
     if(count<=product.variants![selected_varient].inventoryQuantity!){
 
       for(int i=0;i<my_order.length;i++){
@@ -60,7 +62,7 @@ class CartController extends GetxController{
           }
         }
       }
-      my_order.add(MyOrder(product: product.obs,price: count == 1?(product.variants!.first.price!).obs:(product.variants!.first.price!+" X "+count.toString()).obs,quantity: count.obs,varient_id: product.variants![selected_varient].id!,color: product.variants![selected_varient].option1!,size: product.variants![selected_varient].option2!));
+      my_order.add(MyOrder(product: product.obs,price: count == 1?(product.variants!.first.price!).obs:(product.variants!.first.price!+" X "+count.toString()).obs,quantity: count.obs,varient_id: product.variants![selected_varient].id!,color: product.variants![selected_varient].option1!,size: product.variants![selected_varient].option2));
       get_total();
       return true;
     }else{

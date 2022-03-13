@@ -15,20 +15,32 @@ class Checkout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.main,
-      body: Obx(() => SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: AppColors.main,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _header(context),
-                _body(context)
-              ],
+      body: Obx(() => Stack(
+        children: [
+          SafeArea(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: AppColors.main,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _header(context),
+                    _body(context)
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+          Positioned(child: checkoutController.loading.value?Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.black.withOpacity(0.7),
+            child: Center(
+              child: CircularProgressIndicator(color: Colors.white,),
+            ),
+          ):Center())
+        ],
       )),
     );
   }

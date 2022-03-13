@@ -30,6 +30,7 @@ class CheckoutController extends GetxController{
   String phone_code="+971";
   var validate = false.obs;
   var isSwitched = false.obs;
+  var loading = false.obs;
 
   @override
   void onInit() {
@@ -63,16 +64,24 @@ class CheckoutController extends GetxController{
         lineItems.add(LineItem(elm.quantity.value,elm.varient_id));
       }
 
-
+    loading.value=true;
       Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
         if(value){
+          loading.value=false;
           App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
           cartController.clear_cart();
           Get.offAll(()=>Home());
         }else{
+          loading.value=false;
           App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
         }
       });
+        loading.value=false;
+      //     .catchError((err){
+      //   print(err);
+      //   loading.value=false;
+      //   App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
+      // });
     }
   }
 

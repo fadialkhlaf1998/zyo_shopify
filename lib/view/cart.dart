@@ -148,7 +148,8 @@ class Cart extends StatelessWidget {
                                     Text(App_Localization.of(context)!.translate("color") + ": " +cartController.my_order[index].color,
                                       style: TextStyle(fontSize: 12,color: Colors.white),
                                     ),
-                                    Text(App_Localization.of(context)!.translate("size") + ": " +cartController.my_order[index].size,
+                                    cartController.my_order[index].size==null?Center():
+                                    Text(App_Localization.of(context)!.translate("size") + ": " +cartController.my_order[index].size!,
                                       style: TextStyle(fontSize: 12,color: Colors.white),
                                     ),
 

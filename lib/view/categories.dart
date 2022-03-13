@@ -23,34 +23,37 @@ class Categories extends StatelessWidget {
         backgroundColor: AppColors.main,
       body: WillPopScope(
         onWillPop: homeController.onWillPop,
-        child: SafeArea(
-          child:Obx((){
-            return  Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: AppColors.main,
-                  child: Center(
-                    child: Column(
-                      children: [
-                        _header(context),
-                        _body(context)
-                      ],
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: SafeArea(
+            child:Obx((){
+              return  Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: AppColors.main,
+                    child: Center(
+                      child: Column(
+                        children: [
+                          _header(context),
+                          _body(context)
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned(child: homeController.loading.value?Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.black.withOpacity(0.7),
-                  child: Center(
-                    child: CircularProgressIndicator(color: Colors.white,),
-                  ),
-                ):Center())
-              ],
-            );
-          }),
+                  Positioned(child: homeController.loading.value?Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: Colors.black.withOpacity(0.7),
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.white,),
+                    ),
+                  ):Center())
+                ],
+              );
+            }),
+          ),
         ),
       )
     );
@@ -105,35 +108,39 @@ class Categories extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        height: 35,
-                        child: TextField(
-                          controller: categoriesController.search_controller,
-                          cursorColor: Colors.grey,
-                          onSubmitted: (query){
-                            homeController.go_to_search_page_with_loading(query);
-                          },
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            hintText: App_Localization.of(context)!.translate("search"),
-                            contentPadding: EdgeInsets.all(5),
-                            hintStyle: TextStyle(color: Colors.black26),
-                            prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.black26,
-                                size: 20)
-                          ),
-                        ),
-                      ),
+                      IconButton(onPressed: (){
+
+                        _pressed_on_search(context);
+                      }, icon: Icon(Icons.search,color: Colors.white,))
+                      // Container(
+                      //   width: MediaQuery.of(context).size.width * 0.6,
+                      //   height: 35,
+                      //   child: TextField(
+                      //     controller: categoriesController.search_controller,
+                      //     cursorColor: Colors.grey,
+                      //     onSubmitted: (query){
+                      //       homeController.go_to_search_page_with_loading(query);
+                      //     },
+                      //     textAlignVertical: TextAlignVertical.center,
+                      //     decoration: InputDecoration(
+                      //       fillColor: Colors.white,
+                      //       filled: true,
+                      //       enabledBorder: OutlineInputBorder(
+                      //         borderSide: BorderSide(color: Colors.white),
+                      //       ),
+                      //       focusedBorder: OutlineInputBorder(
+                      //         borderSide: BorderSide(color: Colors.white),
+                      //       ),
+                      //       hintText: App_Localization.of(context)!.translate("search"),
+                      //       contentPadding: EdgeInsets.all(5),
+                      //       hintStyle: TextStyle(color: Colors.black26),
+                      //       prefixIcon: Icon(
+                      //           Icons.search,
+                      //           color: Colors.black26,
+                      //           size: 20)
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(width: 10),
@@ -269,7 +276,7 @@ class Categories extends StatelessWidget {
   _products_list(BuildContext context) {
     return Container(
       width:  homeController.selected_collection.length==0?MediaQuery.of(context).size.width-20:MediaQuery.of(context).size.width * 0.58,
-      height: MediaQuery.of(context).size.height*0.9-50-70,
+      height: MediaQuery.of(context).size.height*0.9-50-80-MediaQuery.of(context).padding.top,
       child: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -350,24 +357,142 @@ class Categories extends StatelessWidget {
     );
   }
   _products(BuildContext context , int index) {
-    return Hero(
-      tag: "product_tag"+homeController.products[index].id.toString()+"categorypage",
-      child: GestureDetector(
-        onTap: () {
-         //Get.to(()=>ProductInfo(homeController.products[index]));
-          homeController.go_to_product_page(homeController.products[index].id!,"product_tag"+homeController.products[index].id.toString()+"categorypage");
-        },
-        child:  Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(homeController.products[index].image!.src!),
-            ),
+    return GestureDetector(
+      onTap: () {
+       //Get.to(()=>ProductInfo(homeController.products[index]));
+        homeController.go_to_product_page(homeController.products[index].id!,"product_tag"+homeController.products[index].id.toString()+"categorypage");
+      },
+      child:  Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          image: DecorationImage(
+            fit: BoxFit.contain,
+            image: NetworkImage(homeController.products[index].image!.src!),
           ),
         ),
       ),
     );
   }
 
+  _pressed_on_search(BuildContext context) async {
+    final result = await showSearch(
+        context: context,
+        delegate: SearchTextField(suggestion_list: Global.suggestion_list,homeController: homeController));
+    // homeController.go_to_search_page(result!);
+    // print(result);
+  }
+
+}
+
+
+
+class SearchTextField extends SearchDelegate<String> {
+  final List<String> suggestion_list;
+  String? result;
+  HomeController homeController;
+
+  SearchTextField(
+      {required this.suggestion_list, required this.homeController});
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      query.isEmpty
+          ? Visibility(
+        child: Text(''),
+        visible: false,
+      )
+          : IconButton(
+        icon: Icon(Icons.search, color: Colors.white,),
+        onPressed: () {
+          close(context, query);
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        Get.back();
+      },
+    );
+  }
+
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context).copyWith(
+      appBarTheme: AppBarTheme(
+        color: AppColors.main, //new AppBar color
+        elevation: 0,
+      ),
+      hintColor: Colors.white,
+      textTheme: TextTheme(
+        headline6: TextStyle(
+            color: Colors.white
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final suggestions = suggestion_list.where((name) {
+      return name.toLowerCase().contains(query.toLowerCase());
+    });
+    homeController.go_to_search_page(query);
+    close(context, query);
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = homeController.all_products.value.where((elm) {
+      return elm.title!.toLowerCase().contains(query.toLowerCase());
+    });
+    return Container(
+      color: AppColors.main,
+      child: ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(
+              suggestions.elementAt(index).title!,
+              style: TextStyle(color: AppColors.main2),
+            ),
+            subtitle: Text(
+              suggestions.elementAt(index).tags!,
+              style: TextStyle(color: AppColors.main2.withOpacity(0.5),fontSize: 12),
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(suggestions.elementAt(index).image!.src!)
+                    )
+                  ),
+                 ),
+            ),
+            onTap: () {
+              query = suggestions.elementAt(index).title!;
+              homeController.go_to_product(suggestions.elementAt(index));
+            },
+          );
+        },
+      ),
+    );
+  }
 }

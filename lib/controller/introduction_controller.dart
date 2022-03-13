@@ -20,6 +20,7 @@ class IntroController extends GetxController {
   CartController cartController = Get.put(CartController());
   List<Collection> collections = <Collection>[];
   List<Product> products = <Product>[];
+  List<Product> all_products = <Product>[];
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -72,6 +73,7 @@ class IntroController extends GetxController {
     for(int i=0;i<collections.length;i++){
       collections[i].products.value.clear();
       collections[i].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections[i].id!);
+      all_products.addAll(collections[i].products.value);
     }
     return true;
   }

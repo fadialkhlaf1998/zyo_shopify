@@ -79,7 +79,7 @@ class _WishListState extends State<WishList> {
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.57,
+                childAspectRatio: 3/5,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 10
             ),
@@ -102,50 +102,37 @@ class _WishListState extends State<WishList> {
             Column(
               children: [
                 Expanded(
-                  flex: 7,
+                  flex: 6,
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
                     height: MediaQuery.of(context).size.height * 0.3,
                     decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       image: DecorationImage(
                           image: NetworkImage(
                               wishlistController.wishlist[index].image!.src!
                           ),
-                          fit: BoxFit.cover
+                          fit: BoxFit.contain
                       ),
                     ),
 
                   ),),
                 Expanded(
-                  flex: 1,
-                  child:_price(context,index),),
-                Expanded(
-                  child: _title(context,index),),
+                  flex: 2,
+                  child:
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _price(context,index),
+                          _title(context,index)
+                        ],
+                      )
+                ),
+
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 7),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child:  GestureDetector(
-                    onTap: () {
-                      //wishlistController.wishlist.value = !wishlistController.wishlist.value;
-                      wishlistController.delete_from_wishlist(wishlistController.wishlist.value[index]);
-                      setState(() {
-                        wishlistController.loading.value = !wishlistController.loading.value;
-                        print(wishlistController.loading.value);
-                      });
-                    },
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                      size: 25,
-                    )
 
-                ),
-              ),
-            )
           ],
         ),
       ),
@@ -154,15 +141,36 @@ class _WishListState extends State<WishList> {
   _price(BuildContext context,int index) {
     return  Padding(
       padding: const EdgeInsets.only(left: 8),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          wishlistController.wishlist[index].variants!.first.price!
-              +" "+App_Localization.of(context)!.translate(Global.currency_code),
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
-          ),),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              wishlistController.wishlist[index].variants!.first.price!
+                  +" "+App_Localization.of(context)!.translate(Global.currency_code),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18
+              ),),
+          ),
+          GestureDetector(
+              onTap: () {
+                //wishlistController.wishlist.value = !wishlistController.wishlist.value;
+                wishlistController.delete_from_wishlist(wishlistController.wishlist.value[index]);
+                setState(() {
+                  wishlistController.loading.value = !wishlistController.loading.value;
+                  print(wishlistController.loading.value);
+                });
+              },
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+                size: 20,
+              )
+
+          )
+        ],
       ),
     );
   }

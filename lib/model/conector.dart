@@ -60,7 +60,7 @@ class Connector{
   }
   static Future<int> login_customers(String email,String pass)async{
     try{
-      Response response =await Dio().get(url+"customers/search.json?email=$email&verified_email=true");
+      Response response =await Dio().get(url+"customers/?email=$email&verified_email=true");
       var customers_json=response.data['customers'] as List;
       return customers_json[0]['id'];
     }catch (e){
@@ -279,20 +279,52 @@ class Connector{
         }
       }
     });
-    print(data);
     request.body=data;
-    print(data);
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+    if (response.statusCode == 200||response.statusCode == 201) {
+      String data = await response.stream.bytesToString();
+      print(data);
+      print("**********************************************");
+      Order order = Order.fromMap(json.decode(data)["order"]);
+      ///orderCode
+      print(order.id!);
+      ///orderType 100: Delivery order
+      ///consignor Shipping company name
+      ///consigneeContact Receiving contact
+      ///consigneePhone Recipient's mobile phone number
+      ///consigneeCountry UAE
+      ///consigneeCity Receiving city
+      ///consigneeAddress Recipient's detailed address
+      ///goodsValue Declared value: It is recommended to keep at most two decimal places
+      ///collectingMoney Collection of money (Local currency): It is recommended to keep at most two decimal places
+      ///paymentMethod 200: COD (Cash On Delivery)
+      ///totalCount Number of packages: must be greater than 0
+      ///totalWeight Weight: must be a value greater than 0; unit: Kg, it is recommended to keep at most two decimal places
+      ///totalVolume Volume: must be a value greater than 0; unit: cm³,It is recommended to keep at most two decimal places
+      ///skuTotal Total number of all SKUs: must be an integer greater than 0
+      ///skuName SKU1*2+SKU2*3+SKU3*1
+      ///batterType Battery properties
+      // Normal	General cargo without electricity
+      ///currency local
+      ///skuNo sku encoding (EGY required)
+      ///skuName sku name(KWT,EGY required)
+      ///skuDesc sku description(EGY required)
+      ///skuQty number of sku(KWT,EGY required)
+      ///skuUrl sku url(EGY required)
+      ///skuGoodsValue sku total declared amount(KWT is required)
+      print(DateTime.now().millisecondsSinceEpoch);
+      print("DateTime.now().millisecondsSinceEpoch");
+      //todo change ture
       return true;
     }
     else {
-      return false;
+      print(response.statusCode);
+      print(await response.stream.bytesToString());
       print(response.reasonPhrase);
+      return false;
     }
 
   }

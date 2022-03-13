@@ -30,6 +30,7 @@ class HomeController extends GetxController {
   RxList<Collection> women = <Collection>[].obs;
   RxList<Collection> selected_collection = <Collection>[].obs;
   RxList<Product> products = <Product>[].obs;
+  RxList<Product> all_products = <Product>[].obs;
   Rx<int> selected_sub_category = 0.obs;
   // List<FourthSubCategory> forthSubCategory = <FourthSubCategory>[];
   // HomePage homePage=HomePage( category: <Category>[], slider: <MySlider>[], comingSoon: <ComingSoon>[],flashSale: <FlashSale>[],home_page_products: <Product>[],new_products: <Product>[],ages: <Brands>[],unisex: <Brands>[]);
@@ -52,6 +53,7 @@ class HomeController extends GetxController {
 
   get_data(){
     // homePage=introController.homePage;
+    all_products.value=introController.all_products;
     for(int i=0;i<introController.collections.length;i++){
       if(introController.collections[i].rules==null){
         collections.add(introController.collections[i]);
@@ -146,8 +148,8 @@ class HomeController extends GetxController {
     print(products.length);
   }
 
-  go_to_product(Product product,String tag){
-    Get.to(()=>ProductInfo(product, tag));
+  go_to_product(Product product){
+    Get.to(()=>ProductInfo(product));
   }
 
   // get_product_by_collection(int title){
