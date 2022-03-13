@@ -5,6 +5,7 @@ import 'package:zyo_shopify/const/api.dart';
 import 'package:zyo_shopify/const/app.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
+import 'package:zyo_shopify/model/conector.dart';
 
 class NoInternet extends StatelessWidget{
   @override
@@ -42,13 +43,11 @@ class NoInternet extends StatelessWidget{
               ),
               RaisedButton(
                 onPressed: (){
-                  App.error_msg(context, "API");
-
-                  // Api.check_internet().then((value) {
-                  //   if(value){
-                  //     Get.back();
-                  //   }
-                  // });
+                  Connector.check_internet().then((value) {
+                    if(value){
+                      Get.back();
+                    }
+                  });
                 },
                 elevation: 2,
                 color: Colors.white,

@@ -97,6 +97,7 @@ class Cart extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: cartController.my_order.length,
         itemBuilder: (context, index) {
+          print(cartController.my_order[index].size);
           return Stack(
             children: [
               Column(
@@ -106,17 +107,19 @@ class Cart extends StatelessWidget {
                     children: [
                       Container(
                         height: MediaQuery.of(context).size.height * 0.2,
+
                         width: MediaQuery.of(context).size.width * 0.3,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
                           image: DecorationImage(
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                             image: NetworkImage(cartController.my_order.value[index].product.value.image!.src!),
                           ),
                         ),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        height: MediaQuery.of(context).size.height * 0.15,
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,6 +134,7 @@ class Cart extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         color: Colors.white,
                                         fontSize: 12),
+                                    textAlign: TextAlign.left,
                                     maxLines: 2,
                                   ),
                                 )),
@@ -138,26 +142,41 @@ class Cart extends StatelessWidget {
                               flex: 2,
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      cartController.my_order[index].price.value+" "+ App_Localization.of(context)!.translate(Global.currency_code),
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight:
-                                          FontWeight.bold),
-                                    ),
-                                    Text(App_Localization.of(context)!.translate("color") + ": " +cartController.my_order[index].color,
-                                      style: TextStyle(fontSize: 12,color: Colors.white),
-                                    ),
-                                    cartController.my_order[index].size==null?Center():
-                                    Text(App_Localization.of(context)!.translate("size") + ": " +cartController.my_order[index].size!,
-                                      style: TextStyle(fontSize: 12,color: Colors.white),
-                                    ),
 
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          cartController.my_order[index].price.value+" "+ App_Localization.of(context)!.translate(Global.currency_code),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight:
+                                              FontWeight.bold),
+                                        ),
+                                        Text(App_Localization.of(context)!.translate("color") + ": " +cartController.my_order[index].color,
+                                          style: TextStyle(fontSize: 12,color: Colors.white),
+                                        ),
+                                        cartController.my_order[index].size==null||cartController.my_order[index].size=="null"?Center():
+                                        Text(App_Localization.of(context)!.translate("size") + ": " +cartController.my_order[index].size!,
+                                          style: TextStyle(fontSize: 12,color: Colors.white),
+                                        ),
+
+                                      ],
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: IconButton(
+                                        icon: Icon(Icons.delete,color: Colors.white,),
+                                        onPressed: (){
+                                          cartController.remove_from_cart(cartController.my_order[index]);
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),),
@@ -176,16 +195,7 @@ class Cart extends StatelessWidget {
                   SizedBox(height: 10,),
                 ],
               ),
-              Positioned(
-                bottom: 20,
-                right: 0,
-                child: IconButton(
-                  icon: Icon(Icons.delete,color: Colors.white,),
-                  onPressed: (){
-                      cartController.remove_from_cart(cartController.my_order[index]);
-                  },
-                ),
-              )
+
             ],
           );
           //return _cart_item(context, index);
@@ -642,9 +652,9 @@ class Cart extends StatelessWidget {
       onTap: () {
         // if(Global.customer==null){
         //   Get.to(()=>Registration());
-        // }else if(cartController.my_order.isNotEmpty){
+        if(cartController.my_order.isNotEmpty){
           Get.to(()=>CheckoutChoise());
-        // }
+        }
       },
       child: Container(
         color: Colors.white,

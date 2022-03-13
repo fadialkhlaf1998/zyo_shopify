@@ -98,7 +98,10 @@ class ProductInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(product.variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
-            Text(product.title!,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.normal),),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child:Text(product.title!,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.normal),textAlign: TextAlign.left,),
+            ),
 
             Row(
               mainAxisAlignment: product.options!.length<=1?MainAxisAlignment.center:MainAxisAlignment.spaceBetween,
@@ -398,7 +401,7 @@ class ProductInfo extends StatelessWidget {
           carouselController: productController.controller,
           options: CarouselOptions(
               height: MediaQuery.of(context).size.height * 0.6,
-              autoPlay:product.images!.length!=0
+              autoPlay:product.images!.length>1
                   ? true
                   : false,
               viewportFraction: 1,

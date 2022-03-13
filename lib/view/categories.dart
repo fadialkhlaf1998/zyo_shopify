@@ -81,7 +81,7 @@ class Categories extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          homeController.select_nav_bar.value=3;
+                          homeController.select_nav_bar.value=2;
                         },
                         child: SvgPicture.asset('assets/icons/wishlist2.svg',
                           width: 20,height: 20, color: Colors.white,
@@ -334,6 +334,7 @@ class Categories extends StatelessWidget {
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,fontWeight: FontWeight.bold),
+
                                       ),
                                     ),
                                   ),
@@ -341,6 +342,7 @@ class Categories extends StatelessWidget {
                                     flex: 2,
                                     child: Text(
                                       homeController.products[index].title!,
+                                      textAlign: TextAlign.left,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 11,),
@@ -448,14 +450,12 @@ class SearchTextField extends SearchDelegate<String> {
     final suggestions = suggestion_list.where((name) {
       return name.toLowerCase().contains(query.toLowerCase());
     });
-    homeController.go_to_search_page(query);
-    close(context, query);
+    // homeController.go_to_search_page(query);
+    // close(context, query);
     return Container(
       color: Colors.black,
       child: Center(
-        child: CircularProgressIndicator(
-          color: Colors.white,
-        ),
+        child: Text(App_Localization.of(context)!.translate("fail_search"),style: TextStyle(fontSize: 12,color: Colors.white),),
       ),
     );
   }
@@ -491,7 +491,7 @@ class SearchTextField extends SearchDelegate<String> {
                  ),
             ),
             onTap: () {
-              query = suggestions.elementAt(index).title!;
+              // query = suggestions.elementAt(index).title!;
               homeController.go_to_product(suggestions.elementAt(index));
             },
           );

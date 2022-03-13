@@ -198,7 +198,7 @@ class Home extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            homeController.select_nav_bar.value =3;
+                            homeController.select_nav_bar.value =2;
                           },
                           child: SvgPicture.asset('assets/icons/noun_Heart.svg',
                             width: 20,height: 20, color: Colors.white,
@@ -387,7 +387,7 @@ class Home extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
 
-                                     Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,),
+                                     Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,maxLines: 2,),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -408,7 +408,12 @@ class Home extends StatelessWidget {
                         child: Obx((){
                           return IconButton(
                             onPressed: (){
-                              wishListController.add_to_wishlist(homeController.products[index], context);
+                              if(homeController.products[index].favorite.value){
+                                wishListController.delete_from_wishlist(homeController.products[index]);
+
+                              }else{
+                                wishListController.add_to_wishlist(homeController.products[index], context);
+                              }
                             },
                             icon: Icon(homeController.products[index].favorite.value?Icons.favorite:Icons.favorite_border),
                           );
@@ -610,14 +615,10 @@ class SearchTextField extends SearchDelegate<String> {
     final suggestions = suggestion_list.where((name) {
       return name.toLowerCase().contains(query.toLowerCase());
     });
-    // homeController.go_to_search_page(query);
-    // close(context, query);
     return Container(
       color: Colors.black,
       child: Center(
-        child: CircularProgressIndicator(
-          color: Colors.white,
-        ),
+        child: Text(App_Localization.of(context)!.translate("fail_search"),style: TextStyle(fontSize: 12,color: Colors.white),),
       ),
     );
   }
@@ -653,7 +654,7 @@ class SearchTextField extends SearchDelegate<String> {
               ),
             ),
             onTap: () {
-              query = suggestions.elementAt(index).title!;
+              // query = suggestions.elementAt(index).title!;
               homeController.go_to_product(suggestions.elementAt(index));
             },
           );

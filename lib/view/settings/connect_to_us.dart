@@ -51,12 +51,15 @@ class ConnectToUs extends StatelessWidget {
             onTap: () {
               Get.back();
             },
-            child: Text(App_Localization.of(context)!.translate("connect_to_us"),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-              ),),
+
+            child: Container(
+              child: Text(App_Localization.of(context)!.translate("connect_to_us"),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
           ),
         ],
       ),

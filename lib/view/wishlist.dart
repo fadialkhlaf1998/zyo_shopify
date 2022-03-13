@@ -96,50 +96,47 @@ class _WishListState extends State<WishList> {
     );
   }
   _list_wishlist(BuildContext context, int index) {
-    return Hero(
-      tag: "product_tag"+wishlistController.wishlist[index].id.toString()+"subcategorypage",
-      child: GestureDetector(
-        onTap: (){
-            // homeController.go_to_product_page(wishlistController.wishlist[index].id,"product_tag"+wishlistController.wishlist[index].id.toString()+"subcategorypage");
-        },
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              wishlistController.wishlist[index].image!.src!
-                          ),
-                          fit: BoxFit.contain
-                      ),
+    return GestureDetector(
+      onTap: (){
+          // homeController.go_to_product_page(wishlistController.wishlist[index].id,"product_tag"+wishlistController.wishlist[index].id.toString()+"subcategorypage");
+      },
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            wishlistController.wishlist[index].image!.src!
+                        ),
+                        fit: BoxFit.contain
                     ),
+                  ),
 
-                  ),),
-                Expanded(
-                  flex: 2,
-                  child:
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _price(context,index),
-                          _title(context,index)
-                        ],
-                      )
-                ),
+                ),),
+              Expanded(
+                flex: 2,
+                child:
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _price(context,index),
+                        _title(context,index)
+                      ],
+                    )
+              ),
 
-              ],
-            ),
+            ],
+          ),
 
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -186,6 +183,7 @@ class _WishListState extends State<WishList> {
         alignment: Alignment.centerLeft,
         child: Text(
           wishlistController.wishlist[index].title.toString(),
+          textAlign: TextAlign.left,
           maxLines: 2,
           style: TextStyle(
               color: Colors.white,
