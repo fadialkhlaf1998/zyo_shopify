@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:zyo_shopify/const/api.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/const/store.dart';
@@ -47,16 +48,17 @@ class IntroController extends GetxController {
 
           wishlistController.wishlist.value=wishlist;
           Connector.get_collections().then((collections0)  {
-            collections=collections0;
-            // Connector.get_all_products().then((value) {
+            if(collections0.isNotEmpty){
+              collections=collections0;
               get_products().then((value) {
                 Future.delayed(Duration(milliseconds: 100)).then((value) {
                   get_page();
                 });
-              // });
+              });
+            }else{
+              get_data();
+            }
 
-            });
-         
           });
 
         });

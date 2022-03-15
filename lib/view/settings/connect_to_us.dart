@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
 
@@ -72,8 +73,6 @@ class ConnectToUs extends StatelessWidget {
         _facebook(context),
         SizedBox(height: 20,),
         _instagram(context),
-        SizedBox(height: 20,),
-        _twitter(context)
       ],
     );
   }
@@ -83,7 +82,7 @@ class ConnectToUs extends StatelessWidget {
       color: AppColors.main3,
       child: GestureDetector(
         onTap: () {
-          //todo something
+          _launchURL("https://www.facebook.com/Zyo.collections/");
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 10,right: 10),
@@ -99,13 +98,16 @@ class ConnectToUs extends StatelessWidget {
       ),
     );
   }
+  void _launchURL(String _url) async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
+  }
   _instagram(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       color: AppColors.main3,
       child: GestureDetector(
         onTap: () {
-          //todo something
+          _launchURL("https://instagram.com/zyo.collections");
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 10,right: 10),
@@ -129,26 +131,5 @@ class ConnectToUs extends StatelessWidget {
       ),
     );
   }
-  _twitter(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      color: AppColors.main3,
-      child: GestureDetector(
-        onTap: () {
-          //todo something
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10,right: 10),
-          child: Row(
-            children: [
-              SvgPicture.asset("assets/icons/social_media_contact_us/twitter.svg",width: 30,height: 30,),
-              SizedBox(width: 10,),
-              Text(App_Localization.of(context)!.translate("twitter"),
-                style: TextStyle(color: Colors.white,fontSize: 18),)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
 }
