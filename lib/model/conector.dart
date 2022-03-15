@@ -276,7 +276,19 @@ class Connector{
           "country": country,
           "last_name": last_name,
           "name": first_name + " " + last_name
-        }
+        },
+        "billing_address": {
+          "first_name": first_name,
+          "address1": address_1,
+          "address2": address_2,
+          "phone": "+971"+phone,
+          "city": city,
+          "province": state,
+          "country": country,
+          "last_name": last_name,
+          "name": first_name + " " + last_name
+        },
+        "financial_status":"pending"
       }
     });
     request.body=data;
