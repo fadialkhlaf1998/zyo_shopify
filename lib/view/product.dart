@@ -97,11 +97,12 @@ class ProductInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(product.variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
             Container(
               width: MediaQuery.of(context).size.width,
               child:Text(product.title!,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.normal),textAlign: TextAlign.left,),
             ),
+            Text(product.variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
+
 
             Row(
               mainAxisAlignment: product.options!.length<=1?MainAxisAlignment.center:MainAxisAlignment.spaceBetween,
@@ -281,7 +282,7 @@ class ProductInfo extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Stack(
+                    cartController.my_order.length==0?Center():Stack(
                       children: [
                         Column(
                           children: [
@@ -388,9 +389,9 @@ class ProductInfo extends StatelessWidget {
       children: [
         _slider_images(context),
         SizedBox(height: 20),
-        _title2(product,context),
-        SizedBox(height: 10),
         _price_and_rating(product,context),
+        SizedBox(height: 10),
+        _title2(product,context),
       ],
     );
   }

@@ -32,17 +32,7 @@ class ContentPage extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width*0.93,
                   height: MediaQuery.of(context).size.height*0.1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-
-                      IconButton(icon:Icon(Icons.arrow_back_ios,color: Colors.white,),onPressed: (){Get.back();},),
-                      SizedBox(width: 5,),
-                      Text(title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),
-
-                      // IconButton(icon:Icon(Icons.arrow_back_ios,color: Colors.transparent,),onPressed: (){Get.back();},),
-                    ],
-                  ),
+                  child: _header(context),
                 ),
                 SizedBox(height: 30,),
                 Row(
@@ -70,6 +60,36 @@ class ContentPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+  _header(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.93,
+      height: MediaQuery.of(context).size.height * 0.1,
+      child: Row(
+        children: [
+          GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(Icons.arrow_back_ios,color: Colors.white,size: 20,)),
+          SizedBox(width: 5),
+          GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+
+            child: Container(
+              child: Text(title,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
+          ),
+        ],
       ),
     );
   }

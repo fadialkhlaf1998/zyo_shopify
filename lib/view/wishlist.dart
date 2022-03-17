@@ -78,7 +78,15 @@ class _WishListState extends State<WishList> {
   _body(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Container(
+      child: wishlistController.wishlist.length==0?
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height*0.4,
+            child: Center(
+              child: Text(App_Localization.of(context)!.translate("no_wishlist"),style: TextStyle(fontSize: 14,color: Colors.white),),
+            ),
+          )
+          :Container(
         child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -127,8 +135,8 @@ class _WishListState extends State<WishList> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        _title(context,index),
                         _price(context,index),
-                        _title(context,index)
                       ],
                     )
               ),

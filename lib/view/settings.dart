@@ -85,8 +85,13 @@ class Settings extends StatelessWidget {
         Global.customer==null?Center():_sign_out(context),
         SizedBox(height: 80),
         Center(
-          child: Text(App_Localization.of(context)!.translate("version")+" 7.9.0",
+          child: Text("version "+"1.0.0",
           style: TextStyle(color: AppColors.main2,fontSize: 18)),
+        ),
+        SizedBox(height: 5),
+        Center(
+          child: Text("Developed By Maxart",
+              style: TextStyle(color: AppColors.main2,fontSize: 9)),
         ),
         SizedBox(height: 20),
       ],

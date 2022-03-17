@@ -124,8 +124,17 @@ class HomeController extends GetxController {
     loading.value=false;
   }
 
+  get_delay(){
+    loading.value=true;
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+      loading.value=false;
+    });
+  }
+
   get_sub_category(int index){
+    get_delay();
     select_category.value=index;
+    selected_sub_category.value=0;
     if(collections[index].title!.toLowerCase()=="men"){
       selected_collection=men;
       products.value=men.first.products;
@@ -142,10 +151,11 @@ class HomeController extends GetxController {
   }
 
   get_product (int index){
-    loading.value=false;
+    get_delay();
+    // loading.value=false;
     selected_sub_category.value=index;
     products.value=selected_collection[index].products;
-    print(products.length);
+    print(products.length.toString()+"+++++++++");
   }
 
   go_to_product(Product product){

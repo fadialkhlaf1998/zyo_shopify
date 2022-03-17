@@ -67,7 +67,7 @@ class AddressBook extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 50,),
-        Global.address==null?Container(
+        Global.address==null||Global.address!.phone.length<5?Container(
           width: MediaQuery.of(context).size.width,
           height: 180,
           decoration: BoxDecoration(

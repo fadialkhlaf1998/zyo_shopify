@@ -8,6 +8,7 @@ import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
 import 'package:zyo_shopify/controller/categories_controller.dart';
 import 'package:zyo_shopify/controller/home_controller.dart';
+import 'package:zyo_shopify/controller/wishlist_controller.dart';
 import 'package:zyo_shopify/view/cart.dart';
 
 
@@ -17,6 +18,7 @@ class Categories extends StatelessWidget {
   CategoriesController categoriesController = Get.put(CategoriesController());
   HomeController homeController = Get.find();
   CartController cartController = Get.find();
+  WishListController wishListController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class Categories extends StatelessWidget {
                   Positioned(child: homeController.loading.value?Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withOpacity(1),
                     child: Center(
                       child: CircularProgressIndicator(color: Colors.white,),
                     ),
@@ -83,31 +85,30 @@ class Categories extends StatelessWidget {
                         onTap: () {
                           homeController.select_nav_bar.value=2;
                         },
-                        child: SvgPicture.asset('assets/icons/wishlist2.svg',
-                          width: 20,height: 20, color: Colors.white,
-                        ),
+                        child: Icon(Icons.favorite_border,color: Colors.white,),
                       )
 
                     ],
                   ),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          //todo something
-                        },
-                        child: SvgPicture.asset('assets/icons/noun_message.svg',width: 20,height: 20,color: Colors.transparent,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(width: 10),
+                  // Column(
+                  //   children: [
+                  //     GestureDetector(
+                  //       onTap: () {
+                  //         //todo something
+                  //       },
+                  //       child: SvgPicture.asset('assets/icons/noun_message.svg',width: 20,height: 20,color: Colors.transparent,
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                  cartController.my_order.length==0?Center():SizedBox(width: 10),
                 ],
               )
             ],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
                 children: [
@@ -117,39 +118,11 @@ class Categories extends StatelessWidget {
 
                         _pressed_on_search(context);
                       }, icon: Icon(Icons.search,color: Colors.white,))
-                      // Container(
-                      //   width: MediaQuery.of(context).size.width * 0.6,
-                      //   height: 35,
-                      //   child: TextField(
-                      //     controller: categoriesController.search_controller,
-                      //     cursorColor: Colors.grey,
-                      //     onSubmitted: (query){
-                      //       homeController.go_to_search_page_with_loading(query);
-                      //     },
-                      //     textAlignVertical: TextAlignVertical.center,
-                      //     decoration: InputDecoration(
-                      //       fillColor: Colors.white,
-                      //       filled: true,
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Colors.white),
-                      //       ),
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Colors.white),
-                      //       ),
-                      //       hintText: App_Localization.of(context)!.translate("search"),
-                      //       contentPadding: EdgeInsets.all(5),
-                      //       hintStyle: TextStyle(color: Colors.black26),
-                      //       prefixIcon: Icon(
-                      //           Icons.search,
-                      //           color: Colors.black26,
-                      //           size: 20)
-                      //     ),
-                      //   ),
-                      // ),
+
                     ],
                   ),
-                  SizedBox(width: 10),
-                  Stack(
+                  cartController.my_order.length==0?Center():SizedBox(width: 10),
+                  cartController.my_order.length==0?Center():Stack(
                     children: [
                       Column(
                         children: [
@@ -287,7 +260,15 @@ class Categories extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 10),
-
+              homeController.products.value.length==0?
+              Container(
+                width: MediaQuery.of(context).size.width*0.6,
+                height: MediaQuery.of(context).size.height*0.4,
+                child: Center(
+                  child: Text(App_Localization.of(context)!.translate("no_content"),style: TextStyle(fontSize: 14,color: Colors.white,),textAlign: TextAlign.center,),
+                ),
+              )
+                  :
               GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -299,61 +280,82 @@ class Categories extends StatelessWidget {
                   ),
                   itemCount: homeController.products.length,
                   itemBuilder: (BuildContext ctx, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: Colors.white),
-                      ),
-                      child: Column(
-                        children: [
-                         Expanded(
-                           flex: 3,
-                           child: _products(context,index),),
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: Colors.black
-                              ),
-                              padding: EdgeInsets.only(top: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        // color: Colors.black
-                                      ),
-                                      child: Text(
-                                        homeController.products.value[index].variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,fontWeight: FontWeight.bold),
-
-                                      ),
-                                    ),
+                    return Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // border: Border.all(color: Colors.white),
+                          ),
+                          child: Column(
+                            children: [
+                             Expanded(
+                               flex: 3,
+                               child: _products(context,index),),
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black
                                   ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      homeController.products[index].title!,
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,),
-                                      maxLines: 2,
-                                    ),),
-                                ],
-                              ),
-                            ),
-                          ),),
-                        ],
-                      ),
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          homeController.products[index].title!,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11,),
+                                          maxLines: 2,
+                                        ),),
+
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(25),
+                                            // color: Colors.black
+                                          ),
+                                          child: Text(
+                                            homeController.products.value[index].variants!.first.price!+" "+App_Localization.of(context)!.translate("AED"),
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,fontWeight: FontWeight.bold),
+
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                              ),),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                            right: 0,
+
+                            child: Obx((){
+                              return IconButton(
+                                onPressed: (){
+                                  if(homeController.products[index].favorite.value){
+                                    wishListController.delete_from_wishlist(homeController.products[index]);
+
+                                  }else{
+                                    wishListController.add_to_wishlist(homeController.products[index], context);
+                                  }
+                                },
+                                icon: Icon(homeController.products[index].favorite.value?Icons.favorite:Icons.favorite_border,color: homeController.products[index].favorite.value?Colors.red:Colors.black,),
+                              );
+                            }))
+                      ],
                     );
                   }),
               SizedBox(height: 20,)
@@ -410,9 +412,9 @@ class SearchTextField extends SearchDelegate<String> {
         visible: false,
       )
           : IconButton(
-        icon: Icon(Icons.search, color: Colors.white,),
+        icon: Icon(Icons.close, color: Colors.white,),
         onPressed: () {
-          close(context, query);
+          query="";
         },
       )
     ];

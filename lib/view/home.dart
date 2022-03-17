@@ -167,7 +167,7 @@ class Home extends StatelessWidget {
               Positioned(child: homeController.loading.value?Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withOpacity(1),
                 child: Center(
                   child: CircularProgressIndicator(color: Colors.white,),
                 ),
@@ -200,9 +200,7 @@ class Home extends StatelessWidget {
                           onTap: () {
                             homeController.select_nav_bar.value =2;
                           },
-                          child: SvgPicture.asset('assets/icons/noun_Heart.svg',
-                            width: 20,height: 20, color: Colors.white,
-                          ),
+                          child: Icon(Icons.favorite_border,color: Colors.white,),
                         )
 
                       ],
@@ -248,7 +246,7 @@ class Home extends StatelessWidget {
                             color: Colors.white),
                         onPressed: () => _pressed_on_search(context)
                     ),
-                    Stack(
+                    cartController.my_order.length==0?Center(): Stack(
                      children: [
                        Column(
                          children: [
@@ -343,7 +341,15 @@ class Home extends StatelessWidget {
   _products(BuildContext context){
     return Padding(
         padding: EdgeInsets.only(left: 20,right: 20,bottom: 20,top: homeController.selected_collection.value.length==0?20:0),
-        child: Container(
+        child: homeController.products.value.length==0?
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height*0.4,
+              child: Center(
+                child: Text(App_Localization.of(context)!.translate("no_content"),style: TextStyle(fontSize: 14,color: Colors.white),),
+              ),
+            )
+            :Container(
           child: GridView.builder(
             shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -415,7 +421,7 @@ class Home extends StatelessWidget {
                                 wishListController.add_to_wishlist(homeController.products[index], context);
                               }
                             },
-                            icon: Icon(homeController.products[index].favorite.value?Icons.favorite:Icons.favorite_border),
+                            icon: Icon(homeController.products[index].favorite.value?Icons.favorite:Icons.favorite_border,color: homeController.products[index].favorite.value?Colors.red:Colors.black,),
                           );
                         }))
                   ],
@@ -575,9 +581,10 @@ class SearchTextField extends SearchDelegate<String> {
         visible: false,
       )
           : IconButton(
-        icon: Icon(Icons.search, color: Colors.white,),
+        icon: Icon(Icons.close, color: Colors.white,),
         onPressed: () {
-          close(context, query);
+          // close(context, query);
+          query="";
         },
       )
     ];
