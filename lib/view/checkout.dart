@@ -38,14 +38,18 @@ class Checkout extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(child: checkoutController.loading.value?Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.black.withOpacity(0.7),
-            child: Center(
-              child: CircularProgressIndicator(color: Colors.white,),
-            ),
-          ):Center())
+          Obx((){
+            print('*******************************----------------******************************');
+            print(checkoutController.loading.value);
+                return  Positioned(child: checkoutController.loading.value?Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.black.withOpacity(0.7),
+              child: Center(
+                child: CircularProgressIndicator(color: Colors.white,),
+              ),
+            ):Center());
+          })
         ],
       )),
     );

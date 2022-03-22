@@ -88,6 +88,7 @@ class CartController extends GetxController{
   // }
 
   clear_cart(){
+    print("******** clear ********");
     my_order.clear();
     get_total();
   }

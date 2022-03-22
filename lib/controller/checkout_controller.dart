@@ -77,7 +77,7 @@ class CheckoutController extends GetxController{
             App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
           }
         });
-        loading.value=false;
+        // loading.value=false;
       }else{
         Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
           if(value){
@@ -90,7 +90,7 @@ class CheckoutController extends GetxController{
             App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
           }
         });
-        loading.value=false;
+        // loading.value=false;
       }
 
       //     .catchError((err){
