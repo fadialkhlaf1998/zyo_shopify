@@ -4,12 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
-import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
 import 'package:zyo_shopify/controller/home_controller.dart';
 import 'package:zyo_shopify/controller/new_coll_controller.dart';
 import 'package:zyo_shopify/view/cart.dart';
-import 'package:zyo_shopify/view/product.dart';
 
 class NewCollection extends StatelessWidget {
   NewCollection({Key? key}) : super(key: key);

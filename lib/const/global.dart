@@ -14,6 +14,7 @@ class Global {
   static Customer? customer;
   static Address? address;
   static int dis_code=0;
+  static bool pick_up = false;
 
   static String currency_code="AED";
   static double currency_covert=1.0;

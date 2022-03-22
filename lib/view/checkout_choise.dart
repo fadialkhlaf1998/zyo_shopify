@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:zyo_shopify/const/app.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
+import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/view/checkout.dart';
 
 class CheckoutChoise extends StatelessWidget {
@@ -31,13 +32,26 @@ class CheckoutChoise extends StatelessWidget {
                   children: [
                     ListTile(
                       onTap: (){
+                        Global.pick_up=false;
                         Get.to(()=>Checkout());
                       },
                       title: Text(App_Localization.of(context)!.translate("cod"),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                      subtitle: Text(App_Localization.of(context)!.translate("cod_sub_title"),style: TextStyle(color: Colors.grey),),
+                      subtitle: Text(App_Localization.of(context)!.translate("cod_sub_title"),style: TextStyle(color: Colors.grey,fontSize: 12),),
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Icon(Icons.drive_eta,color: AppColors.main,),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: (){
+                        Global.pick_up=true;
+                        Get.to(()=>Checkout());
+                      },
+                      title: Text(App_Localization.of(context)!.translate("pick_up"),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                      subtitle: Text(App_Localization.of(context)!.translate("pick_up_content"),style: TextStyle(color: Colors.grey,fontSize: 12),),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.shopping_bag_outlined,color: AppColors.main,),
                       ),
                     )
                   ],

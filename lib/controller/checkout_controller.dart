@@ -63,20 +63,36 @@ class CheckoutController extends GetxController{
         print(elm.quantity);
         lineItems.add(LineItem(elm.quantity.value,elm.varient_id));
       }
-
-    loading.value=true;
-      Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
-        if(value){
-          loading.value=false;
-          App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
-          cartController.clear_cart();
-          Get.offAll(()=>Home());
-        }else{
-          loading.value=false;
-          App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
-        }
-      });
+    print('loading');
+      loading.value=true;
+      if(Global.pick_up){
+        Connector.add_order_pick_up(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
+          if(value){
+            loading.value=false;
+            App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
+            cartController.clear_cart();
+            Get.offAll(()=>Home());
+          }else{
+            loading.value=false;
+            App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
+          }
+        });
         loading.value=false;
+      }else{
+        Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
+          if(value){
+            loading.value=false;
+            App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
+            cartController.clear_cart();
+            Get.offAll(()=>Home());
+          }else{
+            loading.value=false;
+            App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
+          }
+        });
+        loading.value=false;
+      }
+
       //     .catchError((err){
       //   print(err);
       //   loading.value=false;

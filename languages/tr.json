@@ -200,5 +200,8 @@
     "about_us_content": "<div class=\"fs-body-base footer__text\"><p>ZYO Collections (Zero Year Old), Dubai-BAE merkezli bir moda ve güzellik perakendecisi markasıdır ve Modanın yaşı yoktur inancına sahiptir, ne giyerseniz onu giyersiniz. Yaşınız ne olursa olsun kendinizi iyi hissedin.</p><p>Kendinizi ifade etmenize, moda yoluyla en iyi ürünler, benzersizlik ve etkili müşteri hizmeti ile kendinizi sevmenize izin vermek bizim tutkumuzdur.</p><p>Ürünlerimizin çoğunluğu. Türkiye'de yüksek kalitede ve uygun fiyatlarla<br>üretilmektedir. Ürünlerimizi size sunmaktan keyif aldığımız kadar sizin de beğeneceğinizi umuyoruz.&nbsp; Büyüyen ZYO ailesine yardımcı olmak için lütfen bizimle iletişime geçmekten ve geri bildirimlerinizi, önerilerinizi veya sorularınızı paylaşmaktan çekinmeyin.</p></div>",
     "out_of_stock": "Stoklar tükendi",
     "tax_shipping": "Vergiler ve nakliye, ödeme sırasında hesaplanır.",
-    "no_wishlist": "İstek Listeniz boş toplamaya başlayın"
+    "no_wishlist": "İstek Listeniz boş toplamaya başlayın",
+    "pick_up": "Toplamak",
+    "pick_up_content": "sipariş tamamlandıktan sonra +971 56 828 8092 ile iletişime geçin",
+    "billing_address": "Fatura Adresi"
   }

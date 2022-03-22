@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
+import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/address_controller.dart';
 import 'package:zyo_shopify/controller/checkout_controller.dart';
 
@@ -66,7 +67,7 @@ class Checkout extends StatelessWidget {
             onTap: () {
               Get.back();
             },
-            child: Text(App_Localization.of(context)!.translate("shopping_address"),
+            child: Text(App_Localization.of(context)!.translate(Global.pick_up?"billing_address":"shopping_address"),
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,

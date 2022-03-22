@@ -289,7 +289,17 @@ class Connector{
           "last_name": last_name,
           "name": first_name + " " + last_name
         },
-        "financial_status":"pending"
+        "financial_status":"pending",
+        "total_shipping_price_set": {
+          "shop_money": {
+            "amount": "15.00",
+            "currency_code": "AED"
+          },
+          "presentment_money": {
+            "amount": "15.00",
+            "currency_code": "AED"
+          }
+        },
       }
     });
     request.body=data;
@@ -305,7 +315,7 @@ class Connector{
       ///orderCode
       print(order.id!);
       ///orderType 100: Delivery order
-      ///consignor Shipping company name
+      ///consignor imile
       ///consigneeContact Receiving contact
       ///consigneePhone Recipient's mobile phone number
       ///consigneeCountry UAE
@@ -314,9 +324,9 @@ class Connector{
       ///goodsValue Declared value: It is recommended to keep at most two decimal places
       ///collectingMoney Collection of money (Local currency): It is recommended to keep at most two decimal places
       ///paymentMethod 200: COD (Cash On Delivery)
-      ///totalCount Number of packages: must be greater than 0
-      ///totalWeight Weight: must be a value greater than 0; unit: Kg, it is recommended to keep at most two decimal places
-      ///totalVolume Volume: must be a value greater than 0; unit: cm³,It is recommended to keep at most two decimal places
+      ///totalCount 1
+      ///totalWeight 3/4
+      ///totalVolume 1
       ///skuTotal Total number of all SKUs: must be an integer greater than 0
       ///skuName SKU1*2+SKU2*3+SKU3*1
       ///batterType Battery properties
@@ -328,9 +338,194 @@ class Connector{
       ///skuQty number of sku(KWT,EGY required)
       ///skuUrl sku url(EGY required)
       ///skuGoodsValue sku total declared amount(KWT is required)
+
+      int count = 0;
+      int total_count = 0;
+
+      String skuName = "";
+
+      for(int i=0;i<order.lineItems!.length;i++){
+        count++;
+        total_count+=order.lineItems![i].quantity!;
+        if(i!=order.lineItems!.length-1){
+          skuName += order.lineItems![i].sku! + "*" + order.lineItems![i].quantity!.toString()+" + ";
+        }else{
+          skuName += order.lineItems![i].sku! + "*" + order.lineItems![i].quantity!.toString();
+        }
+      }
       print(DateTime.now().millisecondsSinceEpoch);
-      print("DateTime.now().millisecondsSinceEpoch");
+
+      String token = await _get_token();
+      add_order_to_shipping(token,order.id!.toString(),count,total_count,skuName, first_name, last_name, address_1, address_2,
+           phone, city, state, country,order.totalPrice!);
       //todo change ture
+      return true;
+    }
+    else {
+      print(response.statusCode);
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+      return false;
+    }
+
+  }
+  static Future<String> get_token()async{
+    print('***********token************');
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse('https://openapi.52imile.cn/auth/accessToken/grant'));
+    request.body = json.encode({
+      "customerId": "C2106654",
+      "sign": "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJ+pYUN9Y9c7lYkz",
+      // "accessToken": "9f805e5a-1edd-4c1a-bd9d-84dcbd467c4a",
+      "signMethod": "SimpleKey",
+      "format": "json",
+      "version": "1.0.0",
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
+      "timeZone": "+4",
+      "param": {
+        "grantType": "clientCredential"
+      }
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('*****************');
+      var data = (await response.stream.bytesToString());
+      var jsondata = jsonDecode(data);
+      print(jsondata["data"]["accessToken"]);
+      return jsondata["data"]["accessToken"];
+    }
+    else {
+      print(response.reasonPhrase);
+      return "non";
+    }
+
+  }
+
+  static Future<String> _get_token()async{
+    var data = await get_token();
+    if(data=="non"){
+      return await _get_token();
+    }else{
+      return data;
+    }
+  }
+
+  static add_order_to_shipping(String token,String order_id,int count,int total_count,String skuName,
+      String first_name,String last_name,String address_1,String address_2,
+      String phone,String city,String state,String country,String price) async{
+    print('***********order************');
+    print('order ID:' + order_id );
+    print('skuName:' + skuName );
+    print('count:' + count.toString() );
+    print('total_count:' + total_count.toString());
+    print('price:' + price);
+
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse('https://openapi.52imile.cn/client/order/createOrder'));
+    request.body = json.encode({
+      "customerId": "C2106654",
+      "sign": "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJ+pYUN9Y9c7lYkz",
+      // "accessToken": "9f805e5a-1edd-4c1a-bd9d-84dcbd467c4a",
+      "accessToken": token,
+      "signMethod": "SimpleKey",
+      "format": "json",
+      "version": "1.0.0",
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
+      "timeZone": "+4",
+      "param": {
+        "orderCode": order_id,
+        "orderType": "100",
+        //"oldExpressNo": "",
+        "consignor": "ZYO Collection",
+        // "consignorAddress": "DubaiPickup",
+        // "consignee": "fadi alkhlaf",
+        "consigneeContact": first_name+" "+last_name,
+        //"consigneeMobile": "+971589655651",
+        "consigneePhone": phone,
+        //"consigneeEmail": "test@testing.com",
+        "consigneeCountry": country,
+        "consigneeProvince": state,
+        "consigneeCity": city,
+        //"consigneeArea": "test",
+        "consigneeAddress": address_1+" / "+address_2,
+        "goodsValue": price,
+        "collectingMoney": price,
+        "paymentMethod": "200",
+        "totalCount": total_count,
+        "totalWeight": "3.500",
+        "totalVolume": 1,
+        "skuTotal": count,
+        "skuName": skuName,
+        "batterType":"Normal",
+        "currency": "Local",
+        // "skuZh": "Face towel",
+        // "deliveryRequirements": "",
+        // "orderDescription": "remarks here",
+        // "buyerId": "",
+        // "platform": "",
+        // "isInsurance": 0,
+        // "pickDate": "",
+        // "pickType": "0",
+        // "batterType": "",
+
+      }
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
+  }
+
+  static Future<bool> add_order_pick_up(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
+      String phone,String city,String state,String country)async{
+
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var request = http.Request('POST', Uri.parse('https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2022-01/orders.json'));
+
+
+    var data= json.encode({
+      "order": {
+        "line_items": List<dynamic>.from(lineitems.map((x) => x.toMap())),
+        "gateway": "Cash on Delivery (COD)",
+        "billing_address": {
+          "first_name": first_name,
+          "address1": address_1,
+          "address2": address_2,
+          "phone": "+971"+phone,
+          "city": city,
+          "province": state,
+          "country": country,
+          "last_name": last_name,
+          "name": first_name + " " + last_name
+        },
+        "financial_status":"pending"
+      }
+    });
+    request.body=data;
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200||response.statusCode == 201) {
+      String data = await response.stream.bytesToString();
+      Order order = Order.fromMap(json.decode(data)["order"]);
+      print(order.id!);
       return true;
     }
     else {
