@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:new_version/new_version.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
 import 'package:zyo_shopify/const/global.dart';
@@ -25,12 +26,23 @@ class Home extends StatelessWidget {
   WishListController wishListController = Get.find();
   String _url = 'https://flutter.dev';
 
+  _checkVersion(BuildContext context)async{
+    //todo change IDS
+    final newVersion = NewVersion(
+      iOSId: "",
+      androidId: 'com.maxart.zyo_shopify',
+    );
+    final state = await newVersion.getVersionStatus();
+    newVersion.showUpdateDialog(context: context, versionStatus: state!);
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    _checkVersion(context);
     return Scaffold(
       key: homeController.key,
       backgroundColor: AppColors.main,

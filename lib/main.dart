@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_version/new_version.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
@@ -34,6 +35,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+
+
     super.initState();
     Global.load_language().then((language) {
       setState(() {
@@ -41,6 +44,8 @@ class _MyAppState extends State<MyApp> {
       });
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

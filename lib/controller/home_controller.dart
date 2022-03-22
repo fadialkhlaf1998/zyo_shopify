@@ -48,8 +48,9 @@ class HomeController extends GetxController {
   Future<void> onInit() async {
     get_data();
     super.onInit();
-
+    // _checkVersion(super.context);
   }
+
 
   get_data(){
     // homePage=introController.homePage;
