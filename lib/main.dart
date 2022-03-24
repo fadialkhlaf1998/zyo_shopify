@@ -12,6 +12,7 @@ void main() {
   runApp(MyApp());
 }
 //FINAL
+final s = "this is final";
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
