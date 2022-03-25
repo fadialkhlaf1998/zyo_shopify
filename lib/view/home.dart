@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
   _checkVersion(BuildContext context)async{
     //todo change IDS
     final newVersion = NewVersion(
-      iOSId: "",
+      iOSId: "com.Maxart.Zyo",
       androidId: 'com.maxart.zyo_shopify',
     );
     final state = await newVersion.getVersionStatus();
