@@ -94,6 +94,7 @@ class HomeController extends GetxController {
     }
     // collections.value=introController.collections;
     get_sub_category(0);
+    get_product_by_sub_category(0);
     // print(collections.length);
     // products.value=introController.products;
     // get_fourth(introController.subCategory);
@@ -125,38 +126,69 @@ class HomeController extends GetxController {
     loading.value=false;
   }
 
-  get_delay(){
-    loading.value=true;
-    Future.delayed(Duration(milliseconds: 500)).then((value) {
-      loading.value=false;
-    });
-  }
+  // get_delay(){
+  //   loading.value=true;
+  //   Future.delayed(Duration(milliseconds: 500)).then((value) {
+  //     loading.value=false;
+  //   });
+  // }
 
   get_sub_category(int index){
-    get_delay();
+    // get_delay();
     select_category.value=index;
     selected_sub_category.value=0;
     if(collections[index].title!.toLowerCase()=="men"){
       selected_collection=men;
-      products.value=men.first.products;
+      // products.value=men.first.products;
+      get_product_by_sub_category(0);
       // get_product_by_collection(selected_collection.first.id!);
     }else if(collections[index].title!.toLowerCase()=="women"){
       selected_collection=women;
-      products.value=women.first.products;
+      // products.value=women.first.products;
+      get_product_by_sub_category(0);
       // get_product_by_collection(selected_collection.first.id!);
     }else{
       selected_collection=<Collection>[].obs;
       products.value=collections[select_category.value].products;
+      get_product_by_category(select_category.value);
       // get_product_by_collection(collections[select_category.value].id!);
     }
   }
 
-  get_product (int index){
-    get_delay();
+  get_product_by_sub_category (int index)async{
+    // get_delay();
     // loading.value=false;
     selected_sub_category.value=index;
-    products.value=selected_collection[index].products;
+    if(selected_collection[index].products.isEmpty){
+      loading.value=true;
+      selected_collection[index].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,selected_collection[index].id!);
+      products.value=selected_collection[index].products;
+      loading.value=false;
+    }else{
+      products.value=selected_collection[index].products;
+    }
+
+
     print(products.length.toString()+"+++++++++");
+  }
+  get_product_by_category (int index)async{
+    // get_delay();
+    // loading.value=false;
+    if(collections[index].products.isEmpty){
+      loading.value=true;
+      collections[index].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections[index].id!);
+      products.value=collections[index].products;
+      loading.value=false;
+    }else{
+      products.value=collections[index].products;
+    }
+
+
+    print(products.length.toString()+"+++++++++");
+  }
+
+  update_product(){
+
   }
 
   go_to_product(Product product){
@@ -214,24 +246,7 @@ class HomeController extends GetxController {
 
   }
 
-  get_product_by_sub_category(int index){
-    // App.error_msg(context, "api");
-    print('API');
-    // Api.check_internet().then((net) {
-    //   if(net){
-    //     loading.value=true;
-    //     Api.getProducts(wishlistController.wishlist,subCategory.value[index].id).then((value) {
-    //       products.value=value;
-    //       loading.value=false;
-    //     });
-    //   }else{
-    //     Get.to(NoInternet())!.then((value) {
-    //       get_product_by_sub_category(index);
-    //     });
-    //   }
-    // });
 
-  }
 
   go_to_product_page(int id,String tag){
     // App.error_msg(context, "api");

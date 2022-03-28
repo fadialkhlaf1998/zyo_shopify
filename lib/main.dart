@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_version/new_version.dart';
 import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/const/app_colors.dart';
 import 'package:zyo_shopify/const/app_localization.dart';
 import 'package:zyo_shopify/view/introduction.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:zyo_shopify/view/no_internet.dart';
 
 void main() {
   runApp(MyApp());

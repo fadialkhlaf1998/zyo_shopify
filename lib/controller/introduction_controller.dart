@@ -72,11 +72,13 @@ class IntroController extends GetxController {
 
   }
   Future<bool> get_products() async {
-    for(int i=0;i<collections.length;i++){
-      collections[i].products.value.clear();
-      collections[i].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections[i].id!);
-      all_products.addAll(collections[i].products.value);
-    }
+    // for(int i=0;i<collections.length;i++){
+    //   collections[i].products.value.clear();
+    //   collections[i].products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections[i].id!);
+    //   // all_products.addAll(collections[i].products.value);
+    // }
+    //collections.first.products.value = await Connector.get_products_by_Collection(wishlistController.wishlist,collections.first.id!);
+    all_products.addAll(await Connector.get_all_products(wishlistController.wishlist));
     return true;
   }
   get_page(){

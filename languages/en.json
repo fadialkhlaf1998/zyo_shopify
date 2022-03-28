@@ -183,5 +183,7 @@
   "no_wishlist": "Your Wishlist is empty, start collecting",
   "pick_up": "Pick Up",
   "pick_up_content": "contact with +971 56 828 8092 after complete order",
-  "billing_address": "Billing Address"
+  "billing_address": "Billing Address",
+  "order_no": "Order No",
+  "order_accepted": "Order Accepted"
 }

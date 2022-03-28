@@ -203,5 +203,7 @@
     "no_wishlist": "İstek Listeniz boş toplamaya başlayın",
     "pick_up": "Toplamak",
     "pick_up_content": "sipariş tamamlandıktan sonra +971 56 828 8092 ile iletişime geçin",
-    "billing_address": "Fatura Adresi"
+    "billing_address": "Fatura Adresi",
+    "order_no": "Sipariş No",
+    "order_accepted": "Sipariş Kabul Edildi"
   }

@@ -105,6 +105,18 @@ class Connector{
       return <Product>[];
     }
   }
+
+  static Future<List<Product>> get_all_products(List<Product> wishlist)async{
+    try {
+      Response response = await Dio().get(
+          url + "products.json",
+
+      );
+      return get_favorite(wishlist,Products.fromJson(response.toString()).products??<Product>[]);
+    }catch (e){
+      return <Product>[];
+    }
+  }
   static Future<List<Product>> get_products(List<Product> wishlist,int collection_id)async{
     try {
     print('*********-------***********');
@@ -133,18 +145,18 @@ class Connector{
     }
     return prods;
   }
-  static Future<List<Product>> get_all_products()async{
-    try {
-      Response response = await Dio().get(
-        url + "products.json",
-      );
-      List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
-      return ps;
-
-    }catch (e){
-      return <Product>[];
-    }
-  }
+  // static Future<List<Product>> get_all_products()async{
+  //   try {
+  //     Response response = await Dio().get(
+  //       url + "products.json",
+  //     );
+  //     List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
+  //     return ps;
+  //
+  //   }catch (e){
+  //     return <Product>[];
+  //   }
+  // }
 
   static Future<List<Order>> get_customer_orders(int cusomer_id)async{
     try {
@@ -251,7 +263,7 @@ class Connector{
     }
   }
 
-  static Future<bool> add_order(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
+  static Future<int> add_order(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
       String phone,String city,String state,String country)async{
 
     var headers = {
@@ -359,13 +371,13 @@ class Connector{
       add_order_to_shipping(token,order.id!.toString(),count,total_count,skuName, first_name, last_name, address_1, address_2,
            phone, city, state, country,order.totalPrice!);
       //todo change ture
-      return true;
+      return order.id!;
     }
     else {
       print(response.statusCode);
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
-      return false;
+      return -1;
     }
 
   }
@@ -491,7 +503,7 @@ class Connector{
 
   }
 
-  static Future<bool> add_order_pick_up(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
+  static Future<int> add_order_pick_up(List<LineItem> lineitems,String first_name,String last_name,String address_1,String address_2,
       String phone,String city,String state,String country)async{
 
     var headers = {
@@ -527,13 +539,13 @@ class Connector{
       String data = await response.stream.bytesToString();
       Order order = Order.fromMap(json.decode(data)["order"]);
       print(order.id!);
-      return true;
+      return order.id!;
     }
     else {
       print(response.statusCode);
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
-      return false;
+      return -1;
     }
 
   }

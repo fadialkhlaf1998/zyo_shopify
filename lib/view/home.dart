@@ -24,16 +24,18 @@ class Home extends StatelessWidget {
   HomeController homeController = Get.put(HomeController());
   CartController cartController = Get.find();
   WishListController wishListController = Get.find();
-  String _url = 'https://flutter.dev';
 
   _checkVersion(BuildContext context)async{
     //todo change IDS
     final newVersion = NewVersion(
-      iOSId: "com.Maxart.Zyo",
+      iOSId: "com.Maxart.ZyoAe",
       androidId: 'com.maxart.zyo_shopify',
     );
     final state = await newVersion.getVersionStatus();
-    newVersion.showUpdateDialog(context: context, versionStatus: state!);
+    print('*-*-*-*-*-*-**-*');
+    print(state!.canUpdate);
+    // newVersion.showUpdateDialog(context: context, versionStatus: state!);
+    newVersion.showUpdateDialog(context: context, versionStatus: state);
   }
 
   @override
@@ -326,7 +328,7 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
                   child: GestureDetector(
                     onTap: (){
-                      homeController.get_product(index);
+                      homeController.get_product_by_sub_category(index);
                     },
                     child: Column(
                       children: [
@@ -567,8 +569,6 @@ class Home extends StatelessWidget {
     final result = await showSearch(
         context: context,
         delegate: SearchTextField(suggestion_list: Global.suggestion_list,homeController: homeController));
-    // homeController.go_to_search_page(result!);
-    // print(result);
   }
 
 }

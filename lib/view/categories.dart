@@ -231,7 +231,7 @@ class Categories extends StatelessWidget {
       onTap: () {
         // categoriesController.select_sub_category.value = index;
         // homeController.get_product_by_sub_category(index);
-        homeController.get_product(index);
+        homeController.get_product_by_sub_category(index);
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.38,

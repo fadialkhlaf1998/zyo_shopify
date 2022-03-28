@@ -9,8 +9,7 @@ import 'package:zyo_shopify/const/global.dart';
 import 'package:zyo_shopify/controller/cart_controller.dart';
 import 'package:zyo_shopify/model/conector.dart';
 import 'package:zyo_shopify/model/my_order.dart';
-import 'package:zyo_shopify/model/order.dart';
-import 'package:zyo_shopify/view/home.dart';
+import 'package:zyo_shopify/view/accept_order.dart';
 
 class CheckoutController extends GetxController{
 
@@ -67,11 +66,12 @@ class CheckoutController extends GetxController{
       loading.value=true;
       if(Global.pick_up){
         Connector.add_order_pick_up(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
-          if(value){
+          if(value!=-1){
             loading.value=false;
-            App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
+            //App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
             cartController.clear_cart();
-            Get.offAll(()=>Home());
+            // Get.offAll(()=>Home());
+            Get.offAll(()=>AcceptOrder(value.toString()));
           }else{
             loading.value=false;
             App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
@@ -80,11 +80,12 @@ class CheckoutController extends GetxController{
         // loading.value=false;
       }else{
         Connector.add_order(lineItems,first_name.text,last_name.text,address1.text,address2.text,phone.text,city.text,state.text,country).then((value) {
-          if(value){
+          if(value!=-1){
             loading.value=false;
-            App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
+            //App.sucss_msg(context, App_Localization.of(context)!.translate("s_order"));
             cartController.clear_cart();
-            Get.offAll(()=>Home());
+            // Get.offAll(()=>Home());
+            Get.offAll(()=>AcceptOrder(value.toString()));
           }else{
             loading.value=false;
             App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
@@ -93,11 +94,6 @@ class CheckoutController extends GetxController{
         // loading.value=false;
       }
 
-      //     .catchError((err){
-      //   print(err);
-      //   loading.value=false;
-      //   App.error_msg(context, App_Localization.of(context)!.translate("wrong"));
-      // });
     }
   }
 
