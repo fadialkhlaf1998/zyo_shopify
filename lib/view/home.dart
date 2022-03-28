@@ -33,9 +33,10 @@ class Home extends StatelessWidget {
     );
     final state = await newVersion.getVersionStatus();
     print('*-*-*-*-*-*-**-*');
-    print(state!.canUpdate);
     // newVersion.showUpdateDialog(context: context, versionStatus: state!);
-    newVersion.showUpdateDialog(context: context, versionStatus: state);
+    if(state!.canUpdate){
+      newVersion.showUpdateDialog(context: context, versionStatus: state);
+    }
   }
 
   @override
