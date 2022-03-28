@@ -26,24 +26,14 @@ class Home extends StatelessWidget {
   WishListController wishListController = Get.find();
 
   _checkVersion(BuildContext context)async{
+    //todo change IDS
     final newVersion = NewVersion(
       iOSId: "com.Maxart.ZyoAe",
       androidId: 'com.maxart.zyo_shopify',
     );
-    var state = await newVersion.getVersionStatus();
-
-    if (state != null) {
-      debugPrint(state.releaseNotes);
-      debugPrint(state.appStoreLink);
-      debugPrint(state.localVersion);
-      debugPrint(state.storeVersion);
-      debugPrint(state.canUpdate.toString());
-      newVersion.showUpdateDialog(
-        context: context,
-        versionStatus: state,
-      );
-    }else{
-      print('can not update');
+    final state = await newVersion.getVersionStatus();
+    if(state!.canUpdate){
+      newVersion.showUpdateDialog(context: context, versionStatus: state);
     }
   }
 

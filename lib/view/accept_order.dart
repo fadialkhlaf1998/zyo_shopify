@@ -46,7 +46,7 @@ class _AcceptOrderState extends State<AcceptOrder> {
               SvgPicture.asset("assets/icons/accept_order.svg",width: MediaQuery.of(context).size.width*0.5,),
               Text(App_Localization.of(context)!.translate("order_accepted"),style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
               SizedBox(height: 10,),
-              Text(App_Localization.of(context)!.translate("order_no")+order_no,style: TextStyle(fontSize: 16,color: Colors.white),),
+              Text(App_Localization.of(context)!.translate("order_no")+". "+order_no,style: TextStyle(fontSize: 16,color: Colors.white),),
             ],
           ),
         ),

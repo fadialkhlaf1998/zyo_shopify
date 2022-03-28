@@ -51,7 +51,7 @@ class IntroController extends GetxController {
             if(collections0.isNotEmpty){
               collections=collections0;
               get_products().then((value) {
-                Future.delayed(Duration(milliseconds: 100)).then((value) {
+                Future.delayed(Duration(milliseconds: 2000)).then((value) {
                   get_page();
                 });
               });
