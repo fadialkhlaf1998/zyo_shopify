@@ -406,11 +406,11 @@ class Home extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
 
-                                     Text(homeController.products.value[homeController.selected_sub_category.value].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,maxLines: 2,),
+                                    Text(homeController.products.value[index].title!,style: TextStyle(color: Colors.white,fontSize: 11,),textAlign: TextAlign.left,maxLines: 2,),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(homeController.products.value[homeController.selected_sub_category.value].variants!.first.price!+" "+ App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 11,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+                                        Text(homeController.products.value[index].variants!.first.price!+" "+ App_Localization.of(context)!.translate("AED"),style: TextStyle(color: Colors.white,fontSize: 11,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
 
                                       ],
                                     )
