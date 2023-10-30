@@ -13,9 +13,9 @@ import 'package:zyo_shopify/controller/checkout_controller.dart';
 
 class Connector{
 
-  static String url="https://425e8cda0b06e3b9b621e0f9467adaa9:8e026ce88a06b1f60fb9344b39271a3c@zyo-designs.myshopify.com/admin/api/2023-01/";
+  static String url="";
   static String headerName = "X-Shopify-Access-Token";
-  static String token = "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";
+  static String token = "";
   static Future<bool> check_internet()async{
     // return false;
     var connectivityResult = await (Connectivity().checkConnectivity());
