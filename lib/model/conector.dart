@@ -10,13 +10,12 @@ import 'package:zyo_shopify/model/order.dart';
 import 'package:zyo_shopify/model/product.dart';
 import 'package:http/http.dart' as http;
 import 'package:zyo_shopify/controller/checkout_controller.dart';
-//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
 
 class Connector{
 
-  // static String url="https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2021-10/";
-  static String url="https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2022-01/";
-
+  static String url="https://425e8cda0b06e3b9b621e0f9467adaa9:8e026ce88a06b1f60fb9344b39271a3c@zyo-designs.myshopify.com/admin/api/2023-01/";
+  static String headerName = "X-Shopify-Access-Token";
+  static String token = "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";
   static Future<bool> check_internet()async{
     // return false;
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -50,7 +49,10 @@ class Connector{
           }
 
       );
-      Response response =await Dio().post(url+'customers.json',data: form_data,);
+      Response response =await Dio().post(url+'customers.json',data: form_data,
+          options: Options(
+            headers: {headerName: token},
+          ));
       print(response);
       return true;
 
@@ -61,7 +63,10 @@ class Connector{
   }
   static Future<int> login_customers(String email,String pass)async{
     try{
-      Response response =await Dio().get(url+"customers/?email=$email&verified_email=true");
+      Response response =await Dio().get(url+"customers/?email=$email&verified_email=true",
+          options: Options(
+            headers: {headerName: token},
+          ));
       var customers_json=response.data['customers'] as List;
       return customers_json[0]['id'];
     }catch (e){
@@ -71,7 +76,10 @@ class Connector{
   }
   static Future<Customer?> get_customer(int customer_id)async{
     try{
-      Response response =await Dio().get(url+"customers/${customer_id}.json");
+      Response response =await Dio().get(url+"customers/${customer_id}.json",
+          options: Options(
+            headers: {headerName: token},
+          ));
 
       return Customer.fromMap(response.data['customer']);
     }catch (e){
@@ -81,9 +89,15 @@ class Connector{
   }
   static Future<List<Collection>> get_collections ()async{
     try {
+
       Response response = await Dio().get(
-          url + "smart_collections.json"
+          url + "smart_collections.json",
+          options: Options(
+            headers: {headerName: token},
+          )
       );
+      print('00000000000000000000000000000000000000000000000000');
+      print(response);
       return Collections
           .fromJson(response.toString())
           .smartCollections ?? <Collection>[];
@@ -98,7 +112,10 @@ class Connector{
           url + "products.json",
           queryParameters:{
             "collection_id":collection
-          }
+          },
+          options: Options(
+            headers: {headerName: token},
+          )
       );
       return get_favorite(wishlist,Products.fromJson(response.toString()).products??<Product>[]);
     }catch (e){
@@ -110,6 +127,9 @@ class Connector{
     try {
       Response response = await Dio().get(
           url + "products.json",
+          options: Options(
+            headers: {headerName: token},
+          )
 
       );
       return get_favorite(wishlist,Products.fromJson(response.toString()).products??<Product>[]);
@@ -122,6 +142,9 @@ class Connector{
     print('*********-------***********');
       Response response = await Dio().get(
         url + "collections/$collection_id/products.json",
+          options: Options(
+            headers: {headerName: token},
+          )
       );
       print(response.toString());
       List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
@@ -149,6 +172,9 @@ class Connector{
   //   try {
   //     Response response = await Dio().get(
   //       url + "products.json",
+  //           options: Options(
+  //             headers: {headerName: token},
+  //           )
   //     );
   //     List<Product> ps= Products.fromJson(response.toString()).products??<Product>[];
   //     return ps;
@@ -161,7 +187,10 @@ class Connector{
   static Future<List<Order>> get_customer_orders(int cusomer_id)async{
     try {
       Response response = await Dio().get(
-          url + "customers/$cusomer_id/orders.json"
+          url + "customers/$cusomer_id/orders.json",
+          options: Options(
+            headers: {headerName: token},
+          )
       );
       return Ordres.fromJson(response.toString()).orders??<Order>[];
     }catch (e){
@@ -191,7 +220,10 @@ class Connector{
             }
           }
       );
-      Response response =await Dio().post(url+"customers/${customer.id}/addresses.json",data: form_data,);
+      Response response =await Dio().post(url+"customers/${customer.id}/addresses.json",
+        options: Options(
+          headers: {headerName: token},
+        ),data: form_data,);
       print(response);
     }catch (e){
 
@@ -225,7 +257,10 @@ class Connector{
           }
         }
     );
-    Response response =await Dio().put(url+"/admin/api/2021-07/customers/${customer.id}/addresses/${defaultAddress.id}.json",data: form_data,);
+    Response response =await Dio().put(url+"/admin/api/2021-07/customers/${customer.id}/addresses/${defaultAddress.id}.json",
+      options: Options(
+        headers: {headerName: token},
+      ),data: form_data,);
     }catch (e){
       print(e.toString());
       return <Order>[];
@@ -233,7 +268,10 @@ class Connector{
   }
   static Future<bool> delete_address(Customer customer,int Address_id)async{
     try {
-      Response response =await Dio().delete(url+"customers/${customer.id}/addresses/${Address_id}.json",);
+      Response response =await Dio().delete(url+"customers/${customer.id}/addresses/${Address_id}.json",
+          options: Options(
+            headers: {headerName: token},
+          ));
       return true;
     }catch (e){
       return false;
@@ -242,7 +280,10 @@ class Connector{
   static Future<List<DefaultAddress>> get_address(Customer customer)async{
     try {
       List<DefaultAddress> address=<DefaultAddress>[];
-      Response response =await Dio().get(url+"customers/${customer.id}/addresses.json",);
+      Response response =await Dio().get(url+"customers/${customer.id}/addresses.json",
+          options: Options(
+            headers: {headerName: token},
+          ));
 
       var json_address = jsonDecode(response.toString())['addresses'] as List;
       for(int i=0 ; i<json_address.length;i++){
@@ -256,7 +297,10 @@ class Connector{
   static Future<bool> set_address_default(Customer customer,int Address_id)async{
     try {
       List<DefaultAddress> address=<DefaultAddress>[];
-      Response response =await Dio().put(url+"customers/${customer.id}/addresses/${Address_id}/default.json",);
+      Response response =await Dio().put(url+"customers/${customer.id}/addresses/${Address_id}/default.json",
+          options: Options(
+            headers: {headerName: token},
+          ));
       return true;
     }catch (e){
       return false;
@@ -268,8 +312,9 @@ class Connector{
 
     var headers = {
       'Content-Type': 'application/json',
+      headerName:token
     };
-    var request = http.Request('POST', Uri.parse('https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2022-01/orders.json'));
+    var request = http.Request('POST', Uri.parse(url+'orders.json'));
 
 
     var data= json.encode({
@@ -384,7 +429,7 @@ class Connector{
   static Future<String> get_token()async{
     print('***********token************');
     var headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
     var request = http.Request('POST', Uri.parse('https://openapi.imile.com/auth/accessToken/grant'));
     request.body = json.encode({
@@ -439,7 +484,7 @@ class Connector{
     price = (double.parse(price)+15.00).toString();
     print('price:' + price);
     var headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
     var request = http.Request('POST', Uri.parse('https://openapi.imile.com/client/order/createOrder'));
     request.body = json.encode({
@@ -508,8 +553,9 @@ class Connector{
 
     var headers = {
       'Content-Type': 'application/json',
+      headerName:token
     };
-    var request = http.Request('POST', Uri.parse('https://8d8620be60c450adfd02e691d95eedea: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@zyo-designs.myshopify.com/admin/api/2022-01/orders.json'));
+    var request = http.Request('POST', Uri.parse(url+'orders.json'));
 
 
     var data= json.encode({

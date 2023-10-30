@@ -41,7 +41,7 @@ class NoInternet extends StatelessWidget{
                   ),
                 ],
               ),
-              RaisedButton(
+              TextButton(
                 onPressed: (){
                   Connector.check_internet().then((value) {
                     if(value){
@@ -49,8 +49,9 @@ class NoInternet extends StatelessWidget{
                     }
                   });
                 },
-                elevation: 2,
-                color: Colors.white,
+                // elevation: 2,
+                // color: Colors.white,
+
                 child:Text(App_Localization.of(context)!.translate("reload"),style: TextStyle(color: Colors.black,fontSize: 16),),
               ),
               SizedBox(height: MediaQuery.of(context).size.height*0.2,),
